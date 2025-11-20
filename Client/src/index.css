@@ -1,0 +1,113 @@
+@import "tailwindcss";@import "tailwindcss";
+@plugin "flowbite-react/plugin/tailwindcss";
+@source "../.flowbite-react/class-list.json";
+@plugin 'tailwind-scrollbar';
+
+
+@custom-variant dark (&:where(.dark, .dark *));
+
+body{
+    height: 100vh;
+    font-weight:font-extrabold;
+    font-family:  font-serif;
+}
+.ql-editor{
+    font-size: 1.05rem;
+}
+
+/* About page css */
+
+
+/* Project page style */
+.group:hover {
+  box-shadow: 0 0 20px rgba(251, 191, 36, 0.4); /* amber glow */
+}
+
+.dark .group:hover {
+  box-shadow: 0 0 25px rgba(253, 224, 71, 0.4); /* yellow glow */
+}
+
+/* signin page  */
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+    transform: translateY(30px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+.animate-fadeIn {
+  animation: fadeIn 1.2s ease forwards;
+}
+
+
+/* === ReactQuill Dark Mode Fix === */
+
+.dark .ql-container {
+  background-color: #374151 !important;
+  border-color: #374151 !important;
+  color: #fff !important;
+}
+
+.dark .ql-editor {
+  color: #fff !important;
+}
+
+/* Placeholder */
+.dark .ql-editor.ql-blank::before {
+  color: #aaa !important;
+}
+
+/* Toolbar */
+.dark .ql-toolbar {
+  background-color: #374151 !important;
+  border-color: black !important;
+}
+.dark .ql-toolbar .ql-stroke {
+  stroke: #ddd !important;
+}
+.dark .ql-toolbar .ql-fill {
+  fill: #ddd !important;
+}
+.dark .ql-toolbar .ql-picker {
+  color: #ddd !important;
+}
+.dark .ql-toolbar button:hover .ql-stroke,
+.dark .ql-toolbar button.ql-active .ql-stroke {
+  stroke: #a855f7 !important;
+}
+
+ /* Custom Keyframes for floating background elements */
+                @keyframes float {
+                    0% { transform: translate(0, 0) rotate(0deg); }
+                    50% { transform: translate(20px, 30px) rotate(5deg); }
+                    100% { transform: translate(0, 0) rotate(0deg); }
+                }
+                @keyframes float-reverse {
+                    0% { transform: translate(0, 0) rotate(0deg); }
+                    50% { transform: translate(-25px, -15px) rotate(-3deg); }
+                    100% { transform: translate(0, 0) rotate(0deg); }
+                }
+                .animate-float { animation: float 15s ease-in-out infinite; }
+                .animate-float-reverse { animation: float-reverse 18s ease-in-out infinite; }
+                
+                /* Custom Keyframes for hero text shine effect */
+                @keyframes textShine {
+                    0% { background-position: 0% 50%; }
+                    100% { background-position: 100% 50%; }
+                }
+                .animate-textShine {
+                    background-size: 200% auto;
+                    animation: textShine 4s linear infinite alternate;
+                }
+                
+                /* Custom Keyframes for hero underline */
+                @keyframes slideIn {
+                    0% { width: 0; }
+                    100% { width: 100%; }
+                }
+                .animate-slideIn {
+                    animation: slideIn 1s ease-out 1.5s forwards;
+                }
