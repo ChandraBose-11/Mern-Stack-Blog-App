@@ -18,8 +18,7 @@ app.use(cookieParser());
 
 app.use(cors({
   origin: [
-    "http://localhost:5173",
-    "https://mern-blog-frontend.onrender.com"
+    "http://localhost:5000"
   ],
   credentials: true
 }));
