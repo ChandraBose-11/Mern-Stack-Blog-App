@@ -16,12 +16,11 @@ const app = express();
 app.use(express.json());
 app.use(cookieParser());
 
-// In production, set `CLIENT_URL` (Netlify URL) on Render and allow credentials.
-const CLIENT_URL = process.env.CLIENT_URL || "*";
 app.use(cors({
-  origin: CLIENT_URL,
-  credentials: CLIENT_URL !== "*",
+  origin: "*",
+  credentials: true
 }));
+
 app.get("/", (req, res) => {
   res.status(200).json({ message: "Backend running successfully ✅" });
 });
