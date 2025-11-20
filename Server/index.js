@@ -17,9 +17,13 @@ app.use(express.json());
 app.use(cookieParser());
 
 app.use(cors({
-  origin: "*",
+  origin: [
+    "http://localhost:5173",
+    "https://mern-blog-frontend.onrender.com"
+  ],
   credentials: true
 }));
+
 
 app.get("/", (req, res) => {
   res.status(200).json({ message: "Backend running successfully ✅" });
