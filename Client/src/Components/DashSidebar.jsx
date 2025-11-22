@@ -18,6 +18,8 @@ const DashSidebar = () => {
   const [tab, setTab] = useState("");
   const dispatch = useDispatch();
   const Navigate = useNavigate();
+   const API_URL = import.meta.env.VITE_API_URL;
+
   useEffect(() => {
     const urlParams = new URLSearchParams(location.search);
     const tabFromUrl = urlParams.get("tab");
@@ -28,7 +30,7 @@ const DashSidebar = () => {
   }, [location.search]);
   const handleSignout = async () => {
     try {
-      const res = await fetch("/api/user/signout", {
+      const res = await fetch(`${API_URL}/api/user/signout`, {
         method: "POST",credentials: "include"
       });
       const data = await res.json();

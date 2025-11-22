@@ -13,6 +13,7 @@ const Search = () => {
   const [posts, setPosts] = useState([]);
   const [loading, setLoading] = useState(false);
   const [showMore, setShowMore] = useState(false);
+ const API_URL = import.meta.env.VITE_API_URL;
 
   const location = useLocation();
 
@@ -35,7 +36,7 @@ const Search = () => {
     const fetchPosts = async () => {
       setLoading(true);
       const searchQuery = urlParams.toString();
-      const res = await fetch(`/api/post/getposts?${searchQuery}`,{credentials:"include"});
+      const res = await fetch(`${API_URL}/api/post/getposts?${searchQuery}`,{credentials:"include"});
       if (!res.ok) {
         setLoading(false);
         return;
@@ -84,7 +85,7 @@ const Search = () => {
     const urlParams = new URLSearchParams(location.search);
     urlParams.set("startIndex", startIndex);
     const searchQuery = urlParams.toString();
-    const res = await fetch(`/api/post/getposts?${searchQuery}`,{credentials:"include"});
+    const res = await fetch(`${API_URL}/api/post/getposts?${searchQuery}`,{credentials:"include"});
     if (!res.ok) {
       return;
     }

@@ -12,6 +12,7 @@ const Postpage = () => {
   const [recentPosts, setRecentPosts] = useState([]);
   const [recentLoading, setRecentLoading] = useState(true);
   const [scrollProgress, setScrollProgress] = useState(0);
+ const API_URL = import.meta.env.VITE_API_URL;
 
   useEffect(() => {
     const handleScroll = () => {
@@ -28,7 +29,7 @@ const Postpage = () => {
       try {
         setLoading(true);
         setError(false);
-        const res = await fetch(`/api/post/getposts?slug=${postSlug}`,{credentials:"include"});
+        const res = await fetch(`${API_URL}/api/post/getposts?slug=${postSlug}`,{credentials:"include"});
         const data = await res.json();
         if (!res.ok || !data.post) throw new Error("Failed to fetch post");
         setPost(data.post);
@@ -46,7 +47,7 @@ const Postpage = () => {
     const fetchRecentPosts = async () => {
       try {
         setRecentLoading(true);
-        const res = await fetch(`/api/post/getposts?limit=4`,{
+        const res = await fetch(`${API_URL}/api/post/getposts?limit=4`,{
           credentials:"include"
         });
         const data = await res.json();

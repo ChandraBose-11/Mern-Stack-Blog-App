@@ -28,13 +28,14 @@ const UpdatePost = () => {
   const [publishError, setPublishError] = useState(null);
   const [successMessage, setSuccessMessage] = useState(null);
   const [noChangeWarning, setNoChangeWarning] = useState(null);
+  const API_URL = import.meta.env.VITE_API_URL;
 
   useEffect(() => {
     if (!postId) return;
 
     const fetchPost = async () => {
       try {
-        const res = await axios.get(`/api/post/${postId}`);
+        const res = await axios.get(`${API_URL}/api/post/${postId}`);
         const post = res.data?.post || res.data;
 
         if (!post) {
@@ -78,10 +79,12 @@ const UpdatePost = () => {
     const isSameContent = formData.content === originalData.content;
     const isSameCategory = formData.category === originalData.category;
     const isSameImage =
-      (file instanceof File ? false : file === originalData.image);
+      file instanceof File ? false : file === originalData.image;
 
     if (isSameTitle && isSameContent && isSameCategory && isSameImage) {
-      setNoChangeWarning("⚠️ No changes detected. Please edit something before saving.");
+      setNoChangeWarning(
+        "⚠️ No changes detected. Please edit something before saving."
+      );
       return;
     }
 
@@ -93,8 +96,8 @@ const UpdatePost = () => {
       if (file && file instanceof File) data.append("image", file);
 
       const xhr = new XMLHttpRequest();
-      xhr.open("PUT", `/api/post/update/${postId}`);
-xhr.withCredentials = true;
+      xhr.open("PUT", `${API_URL}/api/post/update/${postId}`);
+      xhr.withCredentials = true;
       xhr.upload.onprogress = (event) => {
         if (event.lengthComputable)
           setUploadProgress(Math.round((event.loaded / event.total) * 100));
@@ -136,7 +139,8 @@ xhr.withCredentials = true;
               ✍️ Update Your Post
             </h1>
             <p className="text-gray-600 dark:text-gray-400 mb-6">
-              Give your blog a fresh update — refine your content and make it shine.
+              Give your blog a fresh update — refine your content and make it
+              shine.
             </p>
 
             <TextInput

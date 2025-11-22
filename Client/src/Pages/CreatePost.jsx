@@ -13,6 +13,7 @@ const CreatePost = () => {
   const [uploadProgress, setUploadProgress] = useState(null);
   const [publishError, setPublishError] = useState(null);
   const [successMessage, setSuccessMessage] = useState(null);
+ const API_URL = import.meta.env.VITE_API_URL;
 
   const [formData, setFormData] = useState({
     title: "",
@@ -49,7 +50,7 @@ const CreatePost = () => {
       const xhr = new XMLHttpRequest();
       xhr.open(
         "POST",
-        "/api/post/create"
+        `${API_URL}/api/post/create`
       );
       xhr.withCredentials = true;
       xhr.upload.onprogress = (event) => {

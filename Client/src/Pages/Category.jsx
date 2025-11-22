@@ -5,13 +5,14 @@ import PostCard from "../Components/PostCard";
 const Category = () => {
   const { categoryName } = useParams();
   const [posts, setPosts] = useState([]);
+ const API_URL = import.meta.env.VITE_API_URL;
 
   useEffect(() => {
     const fetchPosts = async () => {
       try {
         // Convert URL dashes to spaces to match backend category
         const categoryQuery = categoryName.replace(/-/g, " ");
-        const res = await fetch(`/api/post/getPosts?category=${categoryQuery}`,{
+        const res = await fetch(`${API_URL}/api/post/getPosts?category=${categoryQuery}`,{
           credentials:"include"
         });
         const data = await res.json();

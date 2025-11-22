@@ -11,6 +11,8 @@ const OAuth = () => {
   const auth = getAuth(app);
   const dispatch = useDispatch();
   const navigate = useNavigate();
+   const API_URL = import.meta.env.VITE_API_URL;
+
   const handleSubmit = async () => {
     const provider = new GoogleAuthProvider();
     provider.setCustomParameters({ prompt: "select_account" });
@@ -18,7 +20,7 @@ const OAuth = () => {
       const resultsFromGoogle = await signInWithPopup(auth, provider);
       // console.log(resultsFromGoogle);
       const res = await fetch(
-        "/api/auth/google",
+        `${API_URL}/api/auth/google`,
         {
           method: "POST",
           credentials: "include",

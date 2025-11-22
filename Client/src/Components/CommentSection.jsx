@@ -5,12 +5,13 @@ import Comment from "./Comment";
 const CommentSection = ({ postId, currentUser }) => {
   const [comments, setComments] = useState([]);
   const [newComment, setNewComment] = useState("");
+ const API_URL = import.meta.env.VITE_API_URL;
 
   // Load comments when page loads
   useEffect(() => {
     const fetchComments = async () => {
       try {
-        const res = await fetch(`/comment/getComments/${postId}`, {
+        const res = await fetch(`${API_URL}/api/comment/getComments/${postId}`, {
           credentials: "include"
         });
         const data = await res.json();
@@ -28,7 +29,7 @@ const CommentSection = ({ postId, currentUser }) => {
     if (!newComment.trim()) return;
 
     try {
-      const res = await fetch(`/comment/create`, {
+      const res = await fetch(`${API_URL}/api/comment/create`, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         credentials: "include",
@@ -54,7 +55,7 @@ const CommentSection = ({ postId, currentUser }) => {
   // Like, Edit, Delete handlers
   const handleLike = async (commentId) => {
     try {
-      const res = await fetch(`/comment/like/${commentId}`, {
+      const res = await fetch(`${API_URL}/api/comment/like/${commentId}`, {
         method: "PUT",
         credentials: "include",
       });
@@ -87,7 +88,7 @@ const CommentSection = ({ postId, currentUser }) => {
 
   const handleDelete = async (commentId) => {
     try {
-      const res = await fetch(`/comment/delete/${commentId}`, {
+      const res = await fetch(`${API_URL}/api/comment/delete/${commentId}`, {
         method: "DELETE",
         credentials: "include",
       });

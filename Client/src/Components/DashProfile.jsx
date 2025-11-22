@@ -42,6 +42,7 @@ const DashProfile = () => {
   });
   const [error, setError] = useState(null);
   const [success, setSuccess] = useState(null);
+ const API_URL = import.meta.env.VITE_API_URL;
 
   // --- Effect to initialize form data when currentUser loads ---
   useEffect(() => {
@@ -92,7 +93,7 @@ const DashProfile = () => {
       if (formData.password) data.append("password", formData.password);
       if (imageFile) data.append("profilePicture", imageFile);
 
-      const res = await axios.put(`/api/user/update/${currentUser._id}`, data, {
+      const res = await axios.put(`${API_URL}/api/user/update/${currentUser._id}`, data, {
         headers: { "Content-Type": "multipart/form-data" },
         onUploadProgress: (progressEvent) => {
           const percent = Math.round(
@@ -116,7 +117,7 @@ const DashProfile = () => {
 
   const handleSignout = async () => {
     try {
-      await fetch("/api/user/signout", { method: "POST",credentials: "include" });
+      await fetch(`${API_URL}/api/user/signout`, { method: "POST",credentials: "include" });
       dispatch(signoutSuccess());
       navigate("/signin");
     } catch (error) {
@@ -128,7 +129,7 @@ const DashProfile = () => {
     setShowModal(false);
     try {
       dispatch(deleteUserStart());
-      const res = await fetch(`/api/user/delete/${currentUser._id}`, {
+      const res = await fetch(`${API_URL}/api/user/delete/${currentUser._id}`, {
         method: "DELETE",
         credentials: "include",
       });
