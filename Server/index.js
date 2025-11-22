@@ -18,11 +18,17 @@ app.use(cookieParser());
 
 app.use(cors({
   origin: [
-    "http://localhost:5000"
+    "http://localhost:5173", // local frontend (Vite)
+    "https://mern-stack-blogapp.netlify.app/" // your real Netlify site
   ],
+  methods: ["GET", "POST", "PUT", "DELETE"],
+  allowedHeaders: ["Content-Type", "Authorization"],
   credentials: true
 }));
-
+app.use((req, res, next) => {
+  res.header("Access-Control-Allow-Credentials", "true");
+  next();
+});
 
 app.get("/", (req, res) => {
   res.status(200).json({ message: "Backend running successfully ✅" });
