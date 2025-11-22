@@ -24,23 +24,17 @@ const allowedOrigins = [
 app.use(
   cors({
     origin: (origin, callback) => {
-      // allow requests with no origin (like Postman, mobile apps)
-      if (!origin) return callback(null, true);
-
-      if (allowedOrigins.includes(origin)) {
-        return callback(null, true);
+      if (!origin || allowedOrigins.includes(origin)) {
+        callback(null, true);
+      } else {
+        callback(new Error("CORS blocked for origin: " + origin));
       }
-
-      return callback(new Error("CORS blocked for origin: " + origin));
     },
-    credentials: true, // allow cookies/sessions
+    credentials: true,
     methods: ["GET", "POST", "PUT", "DELETE", "PATCH"],
     allowedHeaders: ["Content-Type", "Authorization"],
   })
 );
-
-// Handle preflight requests
-app.options("/*", cors());
 
 
 app.get("/", (req, res) => {
