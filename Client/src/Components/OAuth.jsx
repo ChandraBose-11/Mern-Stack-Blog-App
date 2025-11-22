@@ -11,7 +11,7 @@ const OAuth = () => {
   const auth = getAuth(app);
   const dispatch = useDispatch();
   const navigate = useNavigate();
-   const API_URL = import.meta.env.VITE_API_URL;
+  
 
   const handleSubmit = async () => {
     const provider = new GoogleAuthProvider();
@@ -20,7 +20,7 @@ const OAuth = () => {
       const resultsFromGoogle = await signInWithPopup(auth, provider);
       // console.log(resultsFromGoogle);
       const res = await fetch(
-        `${API_URL}/api/auth/google`,
+        `https://mern-stack-blog-app-8.onrender.com/api/auth/google`,
         {
           method: "POST",
           credentials: "include",

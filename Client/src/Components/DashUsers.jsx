@@ -21,7 +21,7 @@ const DashUsers = () => {
   const [showMore, setShowMore] = useState(true);
   const [showModal, setShowModal] = useState(false);
   const [userIdDelete, setUserIdDelete] = useState("");
-   const API_URL = import.meta.env.VITE_API_URL;
+  
 
   //   console.log(userUsers);
 
@@ -29,7 +29,7 @@ const DashUsers = () => {
     const fetchUsers = async () => {
       try {
         const res = await fetch(
-          `${API_URL}/api/user/getusers`,
+          `https://mern-stack-blog-app-8.onrender.com/api/user/getusers`,
           { credentials: "include" }
         );
         const data = await res.json();
@@ -53,7 +53,7 @@ const DashUsers = () => {
     const startIndex = users.length;
     try {
       const res = await fetch(
-        `${API_URL}/api/user/getusers?startIndex=${startIndex}`,
+        `https://mern-stack-blog-app-8.onrender.com/api/user/getusers?startIndex=${startIndex}`,
         { credentials: "include" }
       );
       const data = await res.json();
@@ -70,7 +70,7 @@ const DashUsers = () => {
   const handleDeleteuser = async () => {
     try {
       const res = await fetch(
-        `${API_URL}/api/user/delete/${userIdDelete}`,
+        `https://mern-stack-blog-app-8.onrender.com/api/user/delete/${userIdDelete}`,
         {
           method: "DELETE",
           credentials: "include",

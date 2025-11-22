@@ -28,12 +28,12 @@ const DashboardComp = () => {
   const [lastMonthPosts, setLastMonthPosts] = useState(0);
   const [lastMonthComments, setLastMonthComments] = useState(0);
   const { currentUser } = useSelector((state) => state.user);
- const API_URL = import.meta.env.VITE_API_URL;
+
 
   useEffect(() => {
     const fetchUsers = async () => {
       try {
-        const res = await fetch(`${API_URL}/api/user/getusers?limit=5`,{credentials: "include"});
+        const res = await fetch(`https://mern-stack-blog-app-8.onrender.com/api/user/getusers?limit=5`,{credentials: "include"});
         const data = await res.json();
         if (res.ok) {
           setUsers(data.users);
@@ -46,7 +46,7 @@ const DashboardComp = () => {
     };
     const fetchPosts = async () => {
       try {
-        const res = await fetch(`${API_URL}/api/post/getposts?limit=5`,{credentials: "include"});
+        const res = await fetch(`https://mern-stack-blog-app-8.onrender.com/api/post/getposts?limit=5`,{credentials: "include"});
         const data = await res.json();
         if (res.ok) {
           setPosts(data.posts);
@@ -59,7 +59,7 @@ const DashboardComp = () => {
     };
     const fetchComments = async () => {
       try {
-        const res = await fetch(`${API_URL}/api/comment/getcomments?limit=5`,{credentials: "include"});
+        const res = await fetch(`https://mern-stack-blog-app-8.onrender.com/api/comment/getcomments?limit=5`,{credentials: "include"});
         const data = await res.json();
         if (res.ok) {
           setComments(data.comments);

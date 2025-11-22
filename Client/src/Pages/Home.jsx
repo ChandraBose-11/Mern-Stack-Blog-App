@@ -20,11 +20,11 @@ const feature = [
 
 const Home = () => {
   const [posts, setPosts] = useState([]);
- const API_URL = import.meta.env.VITE_API_URL;
+
 
   useEffect(() => {
     const fetchPosts = async () => {
-      const res = await fetch(`${API_URL}/api/post/getPosts?startIndex=0&limit=8`,{credentials:"include"});
+      const res = await fetch(`https://mern-stack-blog-app-8.onrender.com/api/post/getPosts?startIndex=0&limit=8`,{credentials:"include"});
       const data = await res.json();
       setPosts(data.posts);
     };

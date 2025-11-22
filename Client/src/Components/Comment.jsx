@@ -9,13 +9,13 @@ const Comment=({ comment, onLike, onEdit, onDelete })=>{
   const [isEditing, setIsEditing] = useState(false);
   const [editedContent, setEditedContent] = useState(comment.content);
   const { currentUser } = useSelector((state) => state.user);
- const API_URL = import.meta.env.VITE_API_URL;
+
 
   useEffect(() => {
     const getUser = async () => {
       try {
         const res = await fetch(
-          `${API_URL}/api/user/${comment.userId}`,{
+          `https://mern-stack-blog-app-8.onrender.com/api/user/${comment.userId}`,{
             credentials: "include",
           }
         );
@@ -38,7 +38,7 @@ const Comment=({ comment, onLike, onEdit, onDelete })=>{
   const handleSave = async () => {
     try {
       const res = await fetch(
-        `${API_URL}/api/comment/editComment/${
+        `https://mern-stack-blog-app-8.onrender.com/api/comment/editComment/${
           comment._id
         }`,
         {

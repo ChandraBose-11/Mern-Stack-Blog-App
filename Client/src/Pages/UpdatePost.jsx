@@ -28,14 +28,14 @@ const UpdatePost = () => {
   const [publishError, setPublishError] = useState(null);
   const [successMessage, setSuccessMessage] = useState(null);
   const [noChangeWarning, setNoChangeWarning] = useState(null);
-  const API_URL = import.meta.env.VITE_API_URL;
+ 
 
   useEffect(() => {
     if (!postId) return;
 
     const fetchPost = async () => {
       try {
-        const res = await axios.get(`${API_URL}/api/post/${postId}`);
+        const res = await axios.get(`https://mern-stack-blog-app-8.onrender.com/api/post/${postId}`);
         const post = res.data?.post || res.data;
 
         if (!post) {
@@ -96,7 +96,7 @@ const UpdatePost = () => {
       if (file && file instanceof File) data.append("image", file);
 
       const xhr = new XMLHttpRequest();
-      xhr.open("PUT", `${API_URL}/api/post/update/${postId}`);
+      xhr.open("PUT", `https://mern-stack-blog-app-8.onrender.com/api/post/update/${postId}`);
       xhr.withCredentials = true;
       xhr.upload.onprogress = (event) => {
         if (event.lengthComputable)

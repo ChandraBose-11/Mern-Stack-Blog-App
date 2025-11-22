@@ -28,7 +28,7 @@ const Header = () => {
   const [searchTerm, setSearchTerm] = useState("");
   const { currentUser } = useSelector((state) => state.user);
   const { theme } = useSelector((state) => state.theme);
-   const API_URL = import.meta.env.VITE_API_URL;
+  
 
 
   useEffect(() => {
@@ -39,7 +39,7 @@ const Header = () => {
 
   const handleSignout = async () => {
     try {
-      const res = await fetch(`${API_URL}/api/user/signout`, { method: "POST", credentials: "include" });
+      const res = await fetch(`https://mern-stack-blog-app-8.onrender.com/api/user/signout`, { method: "POST", credentials: "include" });
       const data = await res.json();
       if (!res.ok) {
         console.log(data.message);

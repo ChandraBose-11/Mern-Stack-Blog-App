@@ -8,7 +8,7 @@ const Signup = () => {
   const [errorMessage, setErrorMessage] = useState(null);
   const [loading, setLoading] = useState(false);
   const navigate = useNavigate();
- const API_URL = import.meta.env.VITE_API_URL;
+
 
   const handleChange = (e) => {
     setFormData({ ...formData, [e.target.id]: e.target.value.trim() });
@@ -23,7 +23,7 @@ const Signup = () => {
     try {
       setLoading(true);
       setErrorMessage(null);
-      const res = await fetch(`${API_URL}/api/auth/signup`, {
+      const res = await fetch(`https://mern-stack-blog-app-8.onrender.com/api/auth/signup`, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify(formData),

@@ -21,12 +21,12 @@ const DashComments = () => {
   const [showMore, setShowMore] = useState(true);
   const [showModal, setShowModal] = useState(false);
   const [commentIdToDelete, setCommentIdToDelete] = useState("");
-   const API_URL = import.meta.env.VITE_API_URL;
+  
 
   useEffect(() => {
     const fetchComments = async () => {
       try {
-        const res = await fetch(`${API_URL}/api/comment/getcomments`, {
+        const res = await fetch(`https://mern-stack-blog-app-8.onrender.com/api/comment/getcomments`, {
           credentials: "include",
         });
         const data = await res.json();
@@ -49,7 +49,7 @@ const DashComments = () => {
     const startIndex = comments.length;
     try {
       const res = await fetch(
-        `${API_URL}/api/comment/getcomments?startIndex=${startIndex}`,
+        `https://mern-stack-blog-app-8.onrender.com/api/comment/getcomments?startIndex=${startIndex}`,
         {
           credentials: "include",
         }
@@ -70,7 +70,7 @@ const DashComments = () => {
     setShowModal(false);
     try {
       const res = await fetch(
-        `${API_URL}/api/comment/deleteComment/${commentIdToDelete}`,
+        `https://mern-stack-blog-app-8.onrender.com/api/comment/deleteComment/${commentIdToDelete}`,
         {
           method: "DELETE",
           credentials: "include",

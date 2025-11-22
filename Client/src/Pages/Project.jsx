@@ -6,7 +6,7 @@ const Project = () => {
   const [posts, setPosts] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(false);
- const API_URL = import.meta.env.VITE_API_URL;
+
 
   // Fetch all posts
   useEffect(() => {
@@ -14,7 +14,7 @@ const Project = () => {
       try {
         setLoading(true);
         setError(false);
-        const res = await fetch(`${API_URL}/api/post/getposts`,{credentials:"include"});
+        const res = await fetch(`https://mern-stack-blog-app-8.onrender.com/api/post/getposts`,{credentials:"include"});
         const data = await res.json();
         if (!res.ok) throw new Error("Failed to fetch posts");
         setPosts(data.posts || data.post || []);
