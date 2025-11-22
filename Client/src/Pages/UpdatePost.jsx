@@ -212,7 +212,7 @@ const UpdatePost = () => {
             ← Back to Posts
           </Button>
         </div>
-
+<div></div>
         {/* Right Section */}
         <div className="bg-white/80 dark:bg-gray-800/80 backdrop-blur-md rounded-2xl shadow-xl p-8 flex flex-col border border-gray-200 dark:border-gray-700">
           <form onSubmit={handleSubmit} className="flex flex-col h-full">
