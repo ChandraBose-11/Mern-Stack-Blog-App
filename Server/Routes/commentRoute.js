@@ -6,7 +6,7 @@ import {
   editComment,
   getcomments,
   deleteComment,
-} from "../Controllers/commentController.js";
+} from "../Controllers/commentcontroller.js";
 import { verifyToken } from "../Middleware/verifyUser.js";
 
 const router = express.Router();
