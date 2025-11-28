@@ -1,10 +1,10 @@
-import { Button } from 'flowbite-react';
-import { AiFillGoogleCircle } from 'react-icons/ai';
-import { GoogleAuthProvider, signInWithPopup, getAuth } from 'firebase/auth';
-import { app } from '../firebase';
-import { useDispatch } from 'react-redux';
-import { signInSuccess } from '../Redux/Slice/userSlice';
-import { useNavigate } from 'react-router-dom';
+import { Button } from "flowbite-react";
+import { AiFillGoogleCircle } from "react-icons/ai";
+import { GoogleAuthProvider, signInWithPopup, getAuth } from "firebase/auth";
+import { app } from "../firebase";
+import { useDispatch } from "react-redux";
+import { signInSuccess } from "../Redux/Slice/userSlice";
+import { useNavigate } from "react-router-dom";
 
 export default function OAuth() {
   const auth = getAuth(app);
@@ -12,15 +12,15 @@ export default function OAuth() {
   const navigate = useNavigate();
   const handleGoogleClick = async () => {
     const provider = new GoogleAuthProvider();
-    provider.setCustomParameters({ prompt: 'select_account' });
+    provider.setCustomParameters({ prompt: "select_account" });
     try {
       const resultsFromGoogle = await signInWithPopup(auth, provider);
       const res = await fetch(
         `https://mern-stack-blog-app-render.onrender.com/api/auth/google`,
         {
-          method: 'POST',
-          credentials: 'include',
-          headers: { 'Content-Type': 'application/json' },
+          method: "POST",
+          credentials: "include",
+          headers: { "Content-Type": "application/json" },
           body: JSON.stringify({
             name: resultsFromGoogle.user.displayName,
             email: resultsFromGoogle.user.email,
@@ -31,7 +31,7 @@ export default function OAuth() {
       const data = await res.json();
       if (res.ok) {
         dispatch(signInSuccess(data));
-        navigate('/');
+        navigate("/");
       }
     } catch (error) {
       console.log(error);
@@ -39,12 +39,12 @@ export default function OAuth() {
   };
   return (
     <Button
-      type='button'
-      className='bg-gradient-to-r from-indigo-500 via-purple-500 to-pink-500 text-white dark:text-white'
+      type="button"
+      className="bg-gradient-to-r from-indigo-500 via-purple-500 to-pink-500 text-white dark:text-white"
       outline
       onClick={handleGoogleClick}
     >
-      <AiFillGoogleCircle className='w-6 h-6 mr-2' />
+      <AiFillGoogleCircle className="w-6 h-6 mr-2" />
       Continue with Google
     </Button>
   );

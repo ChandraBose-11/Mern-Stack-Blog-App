@@ -1,24 +1,33 @@
-import { Modal, Table, Button, TableHead, TableHeadCell, TableBody, TableCell, TableRow, ModalHeader, ModalBody } from 'flowbite-react';
-import { useEffect, useState } from 'react';
-import { useSelector } from 'react-redux';
-import { Link } from 'react-router-dom';
-import { HiOutlineExclamationCircle } from 'react-icons/hi';
+import {
+  Modal,
+  Table,
+  Button,
+  TableHead,
+  TableHeadCell,
+  TableBody,
+  TableCell,
+  TableRow,
+  ModalHeader,
+  ModalBody,
+} from "flowbite-react";
+import { useEffect, useState } from "react";
+import { useSelector } from "react-redux";
+import { Link } from "react-router-dom";
+import { HiOutlineExclamationCircle } from "react-icons/hi";
 
 export default function DashPosts() {
   const { currentUser } = useSelector((state) => state.user);
   const [userPosts, setUserPosts] = useState([]);
   const [showMore, setShowMore] = useState(true);
   const [showModal, setShowModal] = useState(false);
-  const [postIdToDelete, setPostIdToDelete] = useState('');
+  const [postIdToDelete, setPostIdToDelete] = useState("");
   useEffect(() => {
     const fetchPosts = async () => {
       try {
         const res = await fetch(
-          `https://mern-stack-blog-app-render.onrender.com/api/post/getposts?userId=${
-            currentUser._id
-          }`,
+          `https://mern-stack-blog-app-render.onrender.com/api/post/getposts?userId=${currentUser._id}`,
           {
-            credentials: 'include',
+            credentials: "include",
           }
         );
         const data = await res.json();
@@ -41,11 +50,9 @@ export default function DashPosts() {
     const startIndex = userPosts.length;
     try {
       const res = await fetch(
-        `https://mern-stack-blog-app-render.onrender.com/api/post/getposts?userId=${
-          currentUser._id
-        }&startIndex=${startIndex}`,
+        `https://mern-stack-blog-app-render.onrender.com/api/post/getposts?userId=${currentUser._id}&startIndex=${startIndex}`,
         {
-          credentials: 'include',
+          credentials: "include",
         }
       );
       const data = await res.json();
@@ -66,8 +73,8 @@ export default function DashPosts() {
       const res = await fetch(
         `https://mern-stack-blog-app-render.onrender.com/api/post/deletepost/${postIdToDelete}/${currentUser._id}`,
         {
-          method: 'DELETE',
-          credentials: 'include',
+          method: "DELETE",
+          credentials: "include",
         }
       );
       const data = await res.json();
@@ -84,81 +91,81 @@ export default function DashPosts() {
   };
 
   return (
-    <div className='table-auto overflow-x-scroll md:mx-auto p-3 scrollbar scrollbar-track-slate-100 scrollbar-thumb-slate-300 dark:scrollbar-track-slate-700 dark:scrollbar-thumb-slate-500'>
+    <div className="table-auto overflow-x-scroll md:mx-auto p-3 scrollbar scrollbar-track-slate-100 scrollbar-thumb-slate-300 dark:scrollbar-track-slate-700 dark:scrollbar-thumb-slate-500">
       {currentUser.isAdmin && userPosts.length > 0 ? (
         <>
-        <Table hoverable={true} className="shadow-md">
-  <TableHead>
-    <TableRow>
-    <TableHeadCell>Date updated</TableHeadCell>
-    <TableHeadCell>Post image</TableHeadCell>
-    <TableHeadCell>Post title</TableHeadCell>
-    <TableHeadCell>Category</TableHeadCell>
-    <TableHeadCell>Delete</TableHeadCell>
-    <TableHeadCell>Edit</TableHeadCell>
-    </TableRow>
-  </TableHead>
+          <Table hoverable={true} className="shadow-md">
+            <TableHead>
+              <TableRow>
+                <TableHeadCell>Date updated</TableHeadCell>
+                <TableHeadCell>Post image</TableHeadCell>
+                <TableHeadCell>Post title</TableHeadCell>
+                <TableHeadCell>Category</TableHeadCell>
+                <TableHeadCell>Delete</TableHeadCell>
+                <TableHeadCell>Edit</TableHeadCell>
+              </TableRow>
+            </TableHead>
 
-  <TableBody className="divide-y">
-    {userPosts.map((post) => (
-      <TableRow
-        key={post._id}
-        className="bg-white dark:border-gray-700 dark:bg-gray-800"
-      >
-        <TableCell>
-          {new Date(post.updatedAt).toLocaleDateString()}
-        </TableCell>
+            <TableBody className="divide-y">
+              {userPosts.map((post) => (
+                <TableRow
+                  key={post._id}
+                  className="bg-white dark:border-gray-700 dark:bg-gray-800"
+                >
+                  <TableCell>
+                    {new Date(post.updatedAt).toLocaleDateString()}
+                  </TableCell>
 
-        <TableCell>
-          <Link to={`/post/${post.slug}`}>
-            <img
-              src={post.image}
-              alt={post.title}
-              className="w-20 h-10 object-cover bg-gray-500"
-            />
-          </Link>
-        </TableCell>
+                  <TableCell>
+                    <Link to={`/post/${post.slug}`}>
+                      <img
+                        src={post.image}
+                        alt={post.title}
+                        className="w-20 h-10 object-cover bg-gray-500"
+                      />
+                    </Link>
+                  </TableCell>
 
-        <TableCell>
-          <Link
-            className="font-medium text-gray-900 dark:text-white"
-            to={`/post/${post.slug}`}
-          >
-            {post.title}
-          </Link>
-        </TableCell>
+                  <TableCell>
+                    <Link
+                      className="font-medium text-gray-900 dark:text-white"
+                      to={`/post/${post.slug}`}
+                    >
+                      {post.title}
+                    </Link>
+                  </TableCell>
 
-        <TableCell>{post.category}</TableCell>
+                  <TableCell>{post.category}</TableCell>
 
-        <TableCell>
-          <span
-            onClick={() => {
-              setShowModal(true);
-              setPostIdToDelete(post._id);
-            }}
-            className="font-medium text-red-500 hover:underline cursor-pointer"
-          >
-            Delete
-          </span>
-        </TableCell>
+                  <TableCell>
+                    <span
+                      onClick={() => {
+                        setShowModal(true);
+                        setPostIdToDelete(post._id);
+                      }}
+                      className="font-medium text-red-500 hover:underline cursor-pointer"
+                    >
+                      Delete
+                    </span>
+                  </TableCell>
 
-        <TableCell>
-          <Link
-            className="text-teal-500 hover:underline"
-            to={`/update-post/${post._id}`}
-          >
-            Edit
-          </Link>
-        </TableCell>
-      </TableRow>
-    ))}
-  </TableBody>
-</Table>
+                  <TableCell>
+                    <Link
+                      className="text-teal-500 hover:underline"
+                      to={`/update-post/${post._id}`}
+                    >
+                      Edit
+                    </Link>
+                  </TableCell>
+                </TableRow>
+              ))}
+            </TableBody>
+          </Table>
 
           {showMore && (
             <button
               onClick={handleShowMore}
-              className='w-full text-teal-500 self-center text-sm py-7'
+              className="w-full text-teal-500 self-center text-sm py-7"
             >
               Show more
             </button>
@@ -171,20 +178,20 @@ export default function DashPosts() {
         show={showModal}
         onClose={() => setShowModal(false)}
         popup
-        size='md'
+        size="md"
       >
-        <ModalHeader/>
+        <ModalHeader />
         <ModalBody>
-          <div className='text-center'>
-            <HiOutlineExclamationCircle className='h-14 w-14 text-gray-400 dark:text-gray-200 mb-4 mx-auto' />
-            <h3 className='mb-5 text-lg text-gray-500 dark:text-gray-400'>
+          <div className="text-center">
+            <HiOutlineExclamationCircle className="h-14 w-14 text-gray-400 dark:text-gray-200 mb-4 mx-auto" />
+            <h3 className="mb-5 text-lg text-gray-500 dark:text-gray-400">
               Are you sure you want to delete this post?
             </h3>
-            <div className='flex justify-center gap-4'>
-              <Button color='red' onClick={handleDeletePost}>
+            <div className="flex justify-center gap-4">
+              <Button color="red" onClick={handleDeletePost}>
                 Yes, I'm sure
               </Button>
-              <Button color='gray' onClick={() => setShowModal(false)}>
+              <Button color="gray" onClick={() => setShowModal(false)}>
                 No, cancel
               </Button>
             </div>

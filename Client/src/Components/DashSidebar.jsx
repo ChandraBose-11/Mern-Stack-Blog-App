@@ -6,21 +6,21 @@ import {
   HiOutlineUserGroup,
   HiAnnotation,
   HiChartPie,
-} from 'react-icons/hi';
-import { useEffect, useState } from 'react';
-import { Link, useLocation } from 'react-router-dom';
-import { signoutSuccess } from '../Redux/Slice/userSlice';
-import { useDispatch } from 'react-redux';
-import { useSelector } from 'react-redux';
+} from "react-icons/hi";
+import { useEffect, useState } from "react";
+import { Link, useLocation } from "react-router-dom";
+import { signoutSuccess } from "../Redux/Slice/userSlice";
+import { useDispatch } from "react-redux";
+import { useSelector } from "react-redux";
 
 export default function DashSidebar() {
   const location = useLocation();
   const dispatch = useDispatch();
   const { currentUser } = useSelector((state) => state.user);
-  const [tab, setTab] = useState('');
+  const [tab, setTab] = useState("");
   useEffect(() => {
     const urlParams = new URLSearchParams(location.search);
-    const tabFromUrl = urlParams.get('tab');
+    const tabFromUrl = urlParams.get("tab");
     if (tabFromUrl) {
       setTab(tabFromUrl);
     }
@@ -30,8 +30,8 @@ export default function DashSidebar() {
       const res = await fetch(
         `https://mern-stack-blog-app-render.onrender.com/api/user/signout`,
         {
-          method: 'POST',
-          credentials: 'include',
+          method: "POST",
+          credentials: "include",
         }
       );
       const data = await res.json();
@@ -45,7 +45,7 @@ export default function DashSidebar() {
     }
   };
   return (
-     <div>
+    <div>
       <Sidebar className="w-full md:w-56">
         {/* <SidebarItem> */}
         <SidebarItemGroup className="flex flex-col gap-1">

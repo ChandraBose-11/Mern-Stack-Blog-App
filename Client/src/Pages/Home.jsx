@@ -3,18 +3,60 @@ import { useEffect, useState } from "react";
 import PostCard from "../Components/PostCard";
 
 const categories = [
-  { name: "Technology", icon: "💻", color: "bg-indigo-500", link: "/search?category=technology" },
-  { name: "Lifestyle", icon: "❤️", color: "bg-pink-500", link: "/search?category=lifestyle" },
-  { name: "Business", icon: "💰", color: "bg-amber-500", link: "/search?category=business" },
-  { name: "Education", icon: "📚", color: "bg-blue-500", link: "/search?category=education" },
-  { name: "Entertainment", icon: "🎬", color: "bg-fuchsia-500", link: "/search?category=entertainment" },
-  { name: "News", icon: "📰", color: "bg-red-500", link: "/search?category=news" },
+  {
+    name: "Technology",
+    icon: "💻",
+    color: "bg-indigo-500",
+    link: "/search?category=technology",
+  },
+  {
+    name: "Lifestyle",
+    icon: "❤️",
+    color: "bg-pink-500",
+    link: "/search?category=lifestyle",
+  },
+  {
+    name: "Business",
+    icon: "💰",
+    color: "bg-amber-500",
+    link: "/search?category=business",
+  },
+  {
+    name: "Education",
+    icon: "📚",
+    color: "bg-blue-500",
+    link: "/search?category=education",
+  },
+  {
+    name: "Entertainment",
+    icon: "🎬",
+    color: "bg-fuchsia-500",
+    link: "/search?category=entertainment",
+  },
+  {
+    name: "News",
+    icon: "📰",
+    color: "bg-red-500",
+    link: "/search?category=news",
+  },
 ];
 
 const feature = [
-  { title: "🔥 Trending Topics", text: "Stay ahead with real-time trends and expert insights.", color: "from-purple-500 to-indigo-600" },
-  { title: "🌍 Global Community", text: "Join a diverse audience of creators worldwide.", color: "from-pink-500 to-rose-600" },
-  { title: "🚀 Smooth Experience", text: "Clean design, fast performance, immersive feel.", color: "from-blue-500 to-sky-600" },
+  {
+    title: "🔥 Trending Topics",
+    text: "Stay ahead with real-time trends and expert insights.",
+    color: "from-purple-500 to-indigo-600",
+  },
+  {
+    title: "🌍 Global Community",
+    text: "Join a diverse audience of creators worldwide.",
+    color: "from-pink-500 to-rose-600",
+  },
+  {
+    title: "🚀 Smooth Experience",
+    text: "Clean design, fast performance, immersive feel.",
+    color: "from-blue-500 to-sky-600",
+  },
 ];
 
 export default function Home() {
@@ -23,7 +65,12 @@ export default function Home() {
   // 🌟 Original Functionality (Unchanged)
   useEffect(() => {
     const fetchPosts = async () => {
-      const res = await fetch(`https://mern-stack-blog-app-render.onrender.com/api/post/getPosts`);
+      const res = await fetch(
+        `https://mern-stack-blog-app-render.onrender.com/api/post/getPosts`, {
+        method: "GET",
+        credentials: "include", // 🔥 REQUIRED FOR NETLIFY + RENDER
+      }
+      );
       const data = await res.json();
       setPosts(data.posts);
     };
@@ -39,7 +86,6 @@ export default function Home() {
 
   return (
     <div className="min-h-screen bg-gray-50 dark:bg-[#0f172a] transition-colors duration-500 overflow-hidden relative">
-
       {/* Decorative Overlay */}
       <div className="absolute inset-0 bg-gradient-to-b from-transparent via-transparent to-purple-500/5 pointer-events-none"></div>
 
@@ -56,7 +102,8 @@ export default function Home() {
           </h1>
 
           <p className="text-gray-600 dark:text-gray-300 text-base sm:text-lg mb-10 max-w-2xl mx-auto leading-relaxed">
-            A creative space where stories come alive, ideas connect, and creators share their voices with the world.
+            A creative space where stories come alive, ideas connect, and
+            creators share their voices with the world.
           </p>
 
           <div className="flex flex-wrap gap-4 justify-center">
@@ -93,7 +140,9 @@ export default function Home() {
               to={cat.link}
               className={`group flex flex-col items-center justify-center p-6 rounded-2xl shadow-xl hover:scale-110 duration-300 hover:shadow-2xl transform transition ${cat.color}`}
             >
-              <div className="text-5xl mb-2 group-hover:rotate-12 transition-transform">{cat.icon}</div>
+              <div className="text-5xl mb-2 group-hover:rotate-12 transition-transform">
+                {cat.icon}
+              </div>
               <span className="text-md font-semibold">{cat.name}</span>
             </Link>
           ))}
@@ -145,7 +194,10 @@ export default function Home() {
               ))}
             </div>
 
-            <Link to="/search" className="text-lg text-teal-500 hover:underline">
+            <Link
+              to="/search"
+              className="text-lg text-teal-500 hover:underline"
+            >
               View all posts
             </Link>
           </div>

@@ -34,7 +34,10 @@ const Postpage = () => {
         setError(false);
         const res = await fetch(
           `https://mern-stack-blog-app-render.onrender.com/api/post/getposts?slug=${postSlug}`,
-          { credentials: "include" }
+           {
+            method: "GET",
+            credentials: "include", // 🔥 REQUIRED FIX
+          }
         );
         const data = await res.json();
         if (!res.ok || !data.post) throw new Error("Failed to fetch post");
@@ -55,7 +58,10 @@ const Postpage = () => {
         setRecentLoading(true);
         const res = await fetch(
           `https://mern-stack-blog-app-render.onrender.com/api/post/getposts?limit=4`,
-          { credentials: "include" }
+          {
+            method: "GET",
+            credentials: "include", // 🔥 REQUIRED FIX
+          }
         );
         const data = await res.json();
         if (!res.ok) throw new Error("Failed to fetch recent posts");

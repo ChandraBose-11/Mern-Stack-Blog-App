@@ -27,11 +27,14 @@ export default function CreatePost() {
       const form = new FormData();
       form.append("image", file);
 
-      const res = await fetch(`https://mern-stack-blog-app-render.onrender.com/api/post/create-image`, {
-        method: "POST",
-        credentials: "include",
-        body: form,
-      });
+      const res = await fetch(
+        `https://mern-stack-blog-app-render.onrender.com/api/post/create-image`,
+        {
+          method: "POST",
+          credentials: "include",
+          body: form,
+        }
+      );
 
       const data = await res.json();
 
@@ -67,11 +70,14 @@ export default function CreatePost() {
 
       if (formData.image) form.append("image", formData.image);
 
-      const res = await fetch(`https://mern-stack-blog-app-render.onrender.com/api/post/create`, {
-        method: "POST",
-        credentials: "include",
-        body: form,
-      });
+      const res = await fetch(
+        `https://mern-stack-blog-app-render.onrender.com/api/post/create`,
+        {
+          method: "POST",
+          credentials: "include",
+          body: form,
+        }
+      );
 
       const data = await res.json();
 
@@ -89,7 +95,6 @@ export default function CreatePost() {
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-indigo-50 via-white to-pink-50 dark:from-gray-900 dark:via-gray-950 dark:to-gray-900 py-12 px-4 transition-colors duration-300">
-
       {/* Header */}
       <div className="max-w-6xl mx-auto mb-8 flex flex-col md:flex-row justify-between items-center">
         <div>
@@ -112,11 +117,8 @@ export default function CreatePost() {
       </div>
 
       {/* Form Container */}
-      <div
-        className="max-w-4xl mx-auto bg-white/80 dark:bg-gray-800/80 backdrop-blur-md shadow-lg rounded-2xl p-8 border border-gray-200 dark:border-gray-700 transition-colors duration-300"
-      >
+      <div className="max-w-4xl mx-auto bg-white/80 dark:bg-gray-800/80 backdrop-blur-md shadow-lg rounded-2xl p-8 border border-gray-200 dark:border-gray-700 transition-colors duration-300">
         <form className="flex flex-col gap-6" onSubmit={handleSubmit}>
-
           {/* Title */}
           <TextInput
             type="text"
@@ -190,9 +192,7 @@ export default function CreatePost() {
               placeholder="Write something inspiring..."
               className="h-72 mb-12 rounded-xl"
               required
-              onChange={(value) =>
-                setFormData({ ...formData, content: value })
-              }
+              onChange={(value) => setFormData({ ...formData, content: value })}
             />
           </div>
 

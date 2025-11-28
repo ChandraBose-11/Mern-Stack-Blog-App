@@ -13,8 +13,10 @@ const Project = () => {
       try {
         setLoading(true);
         setError(false);
-        const res = await fetch(`https://mern-stack-blog-app-render.onrender.com/api/post/getposts`, {
-          credentials: "include",
+        const res = await fetch(`https://mern-stack-blog-app-render.onrender.com/api/post/getposts`, 
+        {
+          method: "GET",
+          credentials: "include", // 🔥 Required for JWT cookies
         });
         const data = await res.json();
         if (!res.ok) throw new Error("Failed to fetch posts");

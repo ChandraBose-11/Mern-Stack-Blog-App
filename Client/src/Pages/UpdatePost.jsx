@@ -18,15 +18,17 @@ export default function UpdatePost() {
   const navigate = useNavigate();
   const { currentUser } = useSelector((state) => state.user);
 
-
   //  POST TO EDIT
 
   useEffect(() => {
     const fetchPost = async () => {
       try {
-        const res = await fetch(`https://mern-stack-blog-app-render.onrender.com/api/post/${postId}`, {
-          credentials: "include",
-        });
+        const res = await fetch(
+          `https://mern-stack-blog-app-render.onrender.com/api/post/${postId}`,
+          {
+            credentials: "include",
+          }
+        );
         const data = await res.json();
 
         if (!res.ok) {
@@ -45,9 +47,8 @@ export default function UpdatePost() {
     fetchPost();
   }, [postId]);
 
-
   // UPLOAD IMAGE (Cloudinary)
-  
+
   const handleUploadImage = async () => {
     try {
       if (!file) {
@@ -61,11 +62,14 @@ export default function UpdatePost() {
       const form = new FormData();
       form.append("image", file);
 
-      const res = await fetch(`https://mern-stack-blog-app-render.onrender.com/api/post/create-image`, {
-        method: "POST",
-        credentials: "include",
-        body: form,
-      });
+      const res = await fetch(
+        `https://mern-stack-blog-app-render.onrender.com/api/post/create-image`,
+        {
+          method: "POST",
+          credentials: "include",
+          body: form,
+        }
+      );
 
       const data = await res.json();
 
@@ -85,9 +89,8 @@ export default function UpdatePost() {
     }
   };
 
-
   // SUBMIT UPDATED POST
- 
+
   const handleSubmit = async (e) => {
     e.preventDefault();
 
@@ -108,11 +111,14 @@ export default function UpdatePost() {
         form.append("image", formData.image);
       }
 
-      const res = await fetch(`https://mern-stack-blog-app-render.onrender.com/api/post/update/${postId}`, {
-        method: "PUT",
-        credentials: "include",
-        body: form,
-      });
+      const res = await fetch(
+        `https://mern-stack-blog-app-render.onrender.com/api/post/update/${postId}`,
+        {
+          method: "PUT",
+          credentials: "include",
+          body: form,
+        }
+      );
 
       const data = await res.json();
 
@@ -139,9 +145,8 @@ export default function UpdatePost() {
     { value: "uncategorized", label: "🗂️ Uncategorized" },
   ];
   return (
-        <div className="min-h-screen bg-gradient-to-br from-indigo-100 via-white to-pink-100 dark:from-gray-900 dark:via-gray-800 dark:to-gray-900 px-6 py-10 flex justify-center">
+    <div className="min-h-screen bg-gradient-to-br from-indigo-100 via-white to-pink-100 dark:from-gray-900 dark:via-gray-800 dark:to-gray-900 px-6 py-10 flex justify-center">
       <div className="w-full max-w-6xl grid grid-cols-1 md:grid-cols-2 gap-8">
-
         {/* LEFT SECTION */}
         <div className="backdrop-blur-xl bg-white/60 dark:bg-gray-800/60 rounded-2xl shadow-xl p-8 flex flex-col justify-between border border-gray-200 dark:border-gray-700">
           <div>
@@ -149,7 +154,8 @@ export default function UpdatePost() {
               ✍️ Update Your Post
             </h1>
             <p className="text-gray-600 dark:text-gray-400 mb-6">
-              Give your blog a fresh update — refine your content and make it shine.
+              Give your blog a fresh update — refine your content and make it
+              shine.
             </p>
 
             {/* TITLE */}
@@ -185,7 +191,8 @@ export default function UpdatePost() {
                 type="file"
                 accept="image/*"
                 onChange={(e) => {
-                  if (e.target.files && e.target.files[0]) setFile(e.target.files[0]);
+                  if (e.target.files && e.target.files[0])
+                    setFile(e.target.files[0]);
                 }}
               />
               <p className="text-xs text-gray-500 mt-2">
@@ -242,7 +249,6 @@ export default function UpdatePost() {
         {/* RIGHT SECTION */}
         <div className="bg-white/80 dark:bg-gray-800/80 backdrop-blur-md rounded-2xl shadow-xl p-8 flex flex-col border border-gray-200 dark:border-gray-700">
           <form onSubmit={handleSubmit} className="flex flex-col h-full">
-
             <h2 className="text-2xl font-semibold text-gray-800 dark:text-gray-100 mb-4">
               ✨ Content Editor
             </h2>
