@@ -110,10 +110,13 @@ export default function CreatePost() {
               setFormData({ ...formData, category: e.target.value })
             }
           >
-            <option value="uncategorized">Select a category</option>
-            <option value="javascript">JavaScript</option>
-            <option value="reactjs">React.js</option>
-            <option value="nextjs">Next.js</option>
+            <option value="uncategorized">🗂️ Select A Category</option>
+            <option value="technology">💻 Technology</option>
+            <option value="lifestyle">🌿 Lifestyle</option>
+            <option value="business">💼 Business & Finance</option>
+            <option value="education">📚 Education</option>
+            <option value="entertainment">🎬 Entertainment</option>
+            <option value="news">📰 News</option>
           </Select>
         </div>
 
@@ -154,7 +157,7 @@ export default function CreatePost() {
           }}
         />
 
-        <Button type="submit" gradientDuoTone="purpleToPink">
+        <Button type="submit" >
           Publish
         </Button>
 

@@ -27,9 +27,9 @@ export default function Search() {
     if (searchTermFromUrl || sortFromUrl || categoryFromUrl) {
       setSidebarData({
         ...sidebarData,
-        searchTerm: searchTermFromUrl,
-        sort: sortFromUrl,
-        category: categoryFromUrl,
+        searchTerm: searchTermFromUrl || "",
+        sort: sortFromUrl || "desc",
+        category: categoryFromUrl || "uncategorized",
       });
     }
 
@@ -134,10 +134,13 @@ export default function Search() {
               value={sidebarData.category}
               id='category'
             >
-              <option value='uncategorized'>Uncategorized</option>
-              <option value='reactjs'>React.js</option>
-              <option value='nextjs'>Next.js</option>
-              <option value='javascript'>JavaScript</option>
+             <option value="uncategorized">🗂️ Select A Category</option>
+            <option value="technology">💻 Technology</option>
+            <option value="lifestyle">🌿 Lifestyle</option>
+            <option value="business">💼 Business & Finance</option>
+            <option value="education">📚 Education</option>
+            <option value="entertainment">🎬 Entertainment</option>
+            <option value="news">📰 News</option>
             </Select>
           </div>
           <Button type='submit' outline >
