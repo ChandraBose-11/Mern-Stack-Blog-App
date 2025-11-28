@@ -7,14 +7,15 @@ const Project = () => {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(false);
 
-
   // Fetch all posts
   useEffect(() => {
     const fetchPosts = async () => {
       try {
         setLoading(true);
         setError(false);
-        const res = await fetch(`https://mern-stack-blog-app-8.onrender.com/api/post/getposts`,{credentials:"include"});
+        const res = await fetch(`/api/post/getposts`, {
+          credentials: "include",
+        });
         const data = await res.json();
         if (!res.ok) throw new Error("Failed to fetch posts");
         setPosts(data.posts || data.post || []);
