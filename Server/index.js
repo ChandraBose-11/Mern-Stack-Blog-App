@@ -18,7 +18,7 @@ app.use(cookieParser());
 
 const allowedOrigins = [
   "http://localhost:5173",                  // local (Vite)
-  "https://mern-stack-blogapp.netlify.app" // deployed frontend (NO trailing slash)
+  "https://bloggerhunt-app.netlify.app" // deployed frontend (NO trailing slash)
 ];
 
 app.use(
