@@ -13,7 +13,7 @@ const Project = () => {
       try {
         setLoading(true);
         setError(false);
-        const res = await fetch(`/api/post/getposts`, {
+        const res = await fetch(`${import.meta.env.VITE_API_URL}/api/post/getposts`, {
           credentials: "include",
         });
         const data = await res.json();

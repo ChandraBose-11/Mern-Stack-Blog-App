@@ -28,7 +28,7 @@ export default function DashSidebar() {
   const handleSignout = async () => {
     try {
       const res = await fetch(
-        `/api/user/signout`,
+        `${import.meta.env.VITE_API_URL}/api/user/signout`,
         {
           method: 'POST',
           credentials: 'include',

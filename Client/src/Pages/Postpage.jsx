@@ -33,7 +33,7 @@ const Postpage = () => {
         setLoading(true);
         setError(false);
         const res = await fetch(
-          `https://mern-stack-blog-app-8.onrender.com/api/post/getposts?slug=${postSlug}`,
+          `${import.meta.env.VITE_API_URL}/api/post/getposts?slug=${postSlug}`,
           { credentials: "include" }
         );
         const data = await res.json();
@@ -54,7 +54,7 @@ const Postpage = () => {
       try {
         setRecentLoading(true);
         const res = await fetch(
-          `https://mern-stack-blog-app-8.onrender.com/api/post/getposts?limit=4`,
+          `${import.meta.env.VITE_API_URL}/api/post/getposts?limit=4`,
           { credentials: "include" }
         );
         const data = await res.json();

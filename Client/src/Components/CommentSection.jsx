@@ -21,7 +21,7 @@ export default function CommentSection({ postId }) {
     }
     try {
       const res = await fetch(
-        `/api/comment/create`,
+        `${import.meta.env.VITE_API_URL}/api/comment/create`,
         {
           method: 'POST',
           credentials: 'include',
@@ -50,7 +50,7 @@ export default function CommentSection({ postId }) {
     const getComments = async () => {
       try {
         const res = await fetch(
-          `/api/comment/getPostComments/${postId}`
+          `${import.meta.env.VITE_API_URL}/api/comment/getPostComments/${postId}`
         );
         if (res.ok) {
           const data = await res.json();
@@ -70,7 +70,7 @@ export default function CommentSection({ postId }) {
         return;
       }
       const res = await fetch(
-        `/api/comment/likeComment/${commentId}`,
+        `${import.meta.env.VITE_API_URL}/api/comment/likeComment/${commentId}`,
         {
           method: 'PUT',
           credentials: 'include',
@@ -111,7 +111,7 @@ export default function CommentSection({ postId }) {
         return;
       }
       const res = await fetch(
-        `/api/comment/deleteComment/${commentId}`,
+        `${import.meta.env.VITE_API_URL}/api/comment/deleteComment/${commentId}`,
         {
           method: 'DELETE',
           credentials: 'include',

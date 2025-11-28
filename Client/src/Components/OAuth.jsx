@@ -16,7 +16,7 @@ export default function OAuth() {
     try {
       const resultsFromGoogle = await signInWithPopup(auth, provider);
       const res = await fetch(
-        `/api/auth/google`,
+        `${import.meta.env.VITE_API_URL}/api/auth/google`,
         {
           method: 'POST',
           credentials: 'include',

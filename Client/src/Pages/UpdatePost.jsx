@@ -24,7 +24,7 @@ export default function UpdatePost() {
   useEffect(() => {
     const fetchPost = async () => {
       try {
-        const res = await fetch(`/api/post/${postId}`, {
+        const res = await fetch(`${import.meta.env.VITE_API_URL}/api/post/${postId}`, {
           credentials: "include",
         });
         const data = await res.json();
@@ -61,7 +61,7 @@ export default function UpdatePost() {
       const form = new FormData();
       form.append("image", file);
 
-      const res = await fetch(`/api/post/create-image`, {
+      const res = await fetch(`${import.meta.env.VITE_API_URL}/api/post/create-image`, {
         method: "POST",
         credentials: "include",
         body: form,
@@ -108,7 +108,7 @@ export default function UpdatePost() {
         form.append("image", formData.image);
       }
 
-      const res = await fetch(`/api/post/update/${postId}`, {
+      const res = await fetch(`${import.meta.env.VITE_API_URL}/api/post/update/${postId}`, {
         method: "PUT",
         credentials: "include",
         body: form,

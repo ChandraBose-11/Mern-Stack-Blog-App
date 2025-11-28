@@ -1,7 +1,7 @@
 import { Alert, Button, Label, Spinner, TextInput } from 'flowbite-react';
 import { useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
-import OAuth from '../components/OAuth';
+import OAuth from '../Components/OAuth';
 
 export default function SignUp() {
   const [formData, setFormData] = useState({});
@@ -20,7 +20,7 @@ export default function SignUp() {
       setLoading(true);
       setErrorMessage(null);
       const res = await fetch(
-        `/api/auth/signup`,
+        `${import.meta.env.VITE_API_URL}/api/auth/signup`,
         {
           method: 'POST',
           headers: { 'Content-Type': 'application/json' },

@@ -72,7 +72,7 @@ const DashProfile=()=>{
     }
 
     try {
-      const res = await fetch(`/api/user/update/${currentUser._id}`, {
+      const res = await fetch(`${import.meta.env.VITE_API_URL}/api/user/update/${currentUser._id}`, {
         method: "PUT",
         credentials: "include",
         body: form,
@@ -97,7 +97,7 @@ const DashProfile=()=>{
     setShowModal(false);
     try {
       dispatch(deleteUserStart());
-      const res = await fetch(`/api/user/delete/${currentUser._id}`, {
+      const res = await fetch(`${import.meta.env.VITE_API_URL}/api/user/delete/${currentUser._id}`, {
         method: "DELETE",
         credentials: "include",
       });
@@ -115,7 +115,7 @@ const DashProfile=()=>{
 
   const handleSignout = async () => {
     try {
-      const res = await fetch(`/api/user/signout`, {
+      const res = await fetch(`${import.meta.env.VITE_API_URL}/api/user/signout`, {
         method: "POST",
         credentials: "include",
       });

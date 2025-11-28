@@ -24,7 +24,7 @@ export default function DashboardComp() {
     const fetchUsers = async () => {
       try {
         const res = await fetch(
-          `/api/user/getusers?limit=5`,
+          `${import.meta.env.VITE_API_URL}/api/user/getusers?limit=5`,
           {
             credentials: 'include',
           }
@@ -42,7 +42,7 @@ export default function DashboardComp() {
     const fetchPosts = async () => {
       try {
         const res = await fetch(
-          `/api/post/getposts?limit=5`,
+          `${import.meta.env.VITE_API_URL}/api/post/getposts?limit=5`,
           {
             credentials: 'include',
           }
@@ -60,7 +60,7 @@ export default function DashboardComp() {
     const fetchComments = async () => {
       try {
         const res = await fetch(
-          `/api/comment/getcomments?limit=5`,
+          `${import.meta.env.VITE_API_URL}/api/comment/getcomments?limit=5`,
           {
             credentials: 'include',
           }
