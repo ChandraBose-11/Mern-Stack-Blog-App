@@ -7,6 +7,7 @@ import {
   deletepost,
   updatePost,
   getPostById,
+  Createpostimage
 } from "../Controllers/postController.js";
 
 const router = express.Router();
@@ -17,5 +18,5 @@ router.get("/getposts", getposts);
 router.get("/:postId", getPostById); // used by frontend to fetch by id
 router.delete("/deletepost/:postId/:userId", verifyToken, deletepost);
 router.put("/update/:postId", verifyToken, upload.single("image"), updatePost);
-
+router.post("/create-image", verifyToken, upload.single("image"),Createpostimage)
 export default router;

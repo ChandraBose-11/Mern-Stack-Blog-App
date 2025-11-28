@@ -1,39 +1,25 @@
-import {
-  Table,
-  TableBody,
-  TableCell,
-  TableHead,
-  TableHeadCell,
-  TableRow,
-  Modal,
-  ModalBody,
-  ModalHeader,
-  Button,
-} from "flowbite-react";
-import { HiOutlineExclamationCircle } from "react-icons/hi";
-import React, { useEffect, useState } from "react";
-import { useSelector } from "react-redux";
-import { FaCheck, FaTimes } from "react-icons/fa";
+import { Modal, Table, Button, TableHead, TableHeadCell, TableBody, TableCell, TableRow, ModalHeader, ModalBody } from 'flowbite-react';
+import { useEffect, useState } from 'react';
+import { useSelector } from 'react-redux';
+import { HiOutlineExclamationCircle } from 'react-icons/hi';
+import { FaCheck, FaTimes } from 'react-icons/fa';
 
-const DashUsers = () => {
+export default function DashUsers() {
   const { currentUser } = useSelector((state) => state.user);
   const [users, setUsers] = useState([]);
   const [showMore, setShowMore] = useState(true);
   const [showModal, setShowModal] = useState(false);
-  const [userIdDelete, setUserIdDelete] = useState("");
-  
-
-  //   console.log(userUsers);
-
+  const [userIdToDelete, setUserIdToDelete] = useState('');
   useEffect(() => {
     const fetchUsers = async () => {
       try {
         const res = await fetch(
-          `https://mern-stack-blog-app-8.onrender.com/api/user/getusers`,
-          { credentials: "include" }
+          `/api/user/getusers`,
+          {
+            credentials: 'include',
+          }
         );
         const data = await res.json();
-        // console.log(data);
         if (res.ok) {
           setUsers(data.users);
           if (data.users.length < 9) {
@@ -44,17 +30,19 @@ const DashUsers = () => {
         console.log(error.message);
       }
     };
-    if (currentUser && currentUser.isAdmin) {
+    if (currentUser.isAdmin) {
       fetchUsers();
     }
-  }, [currentUser]);
+  }, [currentUser._id]);
 
   const handleShowMore = async () => {
     const startIndex = users.length;
     try {
       const res = await fetch(
-        `https://mern-stack-blog-app-8.onrender.com/api/user/getusers?startIndex=${startIndex}`,
-        { credentials: "include" }
+        `/api/user/getusers?startIndex=${startIndex}`,
+        {
+          credentials: 'include',
+        }
       );
       const data = await res.json();
       if (res.ok) {
@@ -67,18 +55,19 @@ const DashUsers = () => {
       console.log(error.message);
     }
   };
-  const handleDeleteuser = async () => {
+
+  const handleDeleteUser = async () => {
     try {
       const res = await fetch(
-        `https://mern-stack-blog-app-8.onrender.com/api/user/delete/${userIdDelete}`,
+        `/api/user/delete/${userIdToDelete}`,
         {
-          method: "DELETE",
-          credentials: "include",
+          method: 'DELETE',
+          credentials: 'include',
         }
       );
       const data = await res.json();
       if (res.ok) {
-        setUsers((prev) => prev.filter((user) => user._id !== userIdDelete));
+        setUsers((prev) => prev.filter((user) => user._id !== userIdToDelete));
         setShowModal(false);
       } else {
         console.log(data.message);
@@ -87,24 +76,25 @@ const DashUsers = () => {
       console.log(error.message);
     }
   };
+
   return (
-    <div className="table-auto w-full overflow-x-scroll md:mx-auto p-3 scrollbar scrollbar-track-slate-100 scrollbar-thumb-slate-300 dark:scrollbar-track-slate-700 dark:scrollbar-thumb-slate-500">
+    <div className='table-auto overflow-x-scroll md:mx-auto p-3 scrollbar scrollbar-track-slate-100 scrollbar-thumb-slate-300 dark:scrollbar-track-slate-700 dark:scrollbar-thumb-slate-500'>
       {currentUser.isAdmin && users.length > 0 ? (
         <>
-          <Table hoverable className="shodow-md ">
+          <Table hoverable className='shadow-md'>
             <TableHead>
-              <TableRow>
-                <TableHeadCell>Date Created</TableHeadCell>
-                <TableHeadCell>USER IMAGE</TableHeadCell>
-                <TableHeadCell>USERNAME</TableHeadCell>
-                <TableHeadCell>EMAIL</TableHeadCell>
-                <TableHeadCell>ADMIN</TableHeadCell>
-                <TableHeadCell>DELETE</TableHeadCell>
+               <TableRow>
+              <TableHeadCell>Date created</TableHeadCell>
+              <TableHeadCell>User image</TableHeadCell>
+              <TableHeadCell>Username</TableHeadCell>
+              <TableHeadCell>Email</TableHeadCell>
+              <TableHeadCell>Admin</TableHeadCell>
+              <TableHeadCell>Delete</TableHeadCell>
               </TableRow>
             </TableHead>
             {users.map((user) => (
-              <TableBody className="divide-y" key={user._id}>
-                <TableRow className="bg:white dark:border-gray-700 dark:bg-gray-800">
+              <TableBody className='divide-y' key={user._id}>
+                <TableRow className='bg-white dark:border-gray-700 dark:bg-gray-800'>
                   <TableCell>
                     {new Date(user.createdAt).toLocaleDateString()}
                   </TableCell>
@@ -112,26 +102,25 @@ const DashUsers = () => {
                     <img
                       src={user.profilePicture}
                       alt={user.username}
-                      className="w-10 h-10 object-cover rounded-full bg-gray-500"
+                      className='w-10 h-10 object-cover bg-gray-500 rounded-full'
                     />
                   </TableCell>
                   <TableCell>{user.username}</TableCell>
                   <TableCell>{user.email}</TableCell>
                   <TableCell>
                     {user.isAdmin ? (
-                      <FaCheck className="text-green-500" />
+                      <FaCheck className='text-green-500' />
                     ) : (
-                      <FaTimes className="text-red-500" />
+                      <FaTimes className='text-red-500' />
                     )}
                   </TableCell>
-
                   <TableCell>
                     <span
                       onClick={() => {
                         setShowModal(true);
-                        setUserIdDelete(user._id);
+                        setUserIdToDelete(user._id);
                       }}
-                      className="font-medium text-red-500 hover:underline"
+                      className='font-medium text-red-500 hover:underline cursor-pointer'
                     >
                       Delete
                     </span>
@@ -143,7 +132,7 @@ const DashUsers = () => {
           {showMore && (
             <button
               onClick={handleShowMore}
-              className="w-full text-teal-500 self-center text-sm py-7"
+              className='w-full text-teal-500 self-center text-sm py-7'
             >
               Show more
             </button>
@@ -156,21 +145,21 @@ const DashUsers = () => {
         show={showModal}
         onClose={() => setShowModal(false)}
         popup
-        size="md"
+        size='md'
       >
         <ModalHeader />
         <ModalBody>
-          <div className="text-center">
-            <HiOutlineExclamationCircle className="h-14 w-14 text-gray-400 dark:text-gray-200 mb-4 mx-auto" />
-            <h3 className="mb-3 text-lg text-gray-500 dark:text-gray-400">
-              Are you sure you want to delete this Post?
+          <div className='text-center'>
+            <HiOutlineExclamationCircle className='h-14 w-14 text-gray-400 dark:text-gray-200 mb-4 mx-auto' />
+            <h3 className='mb-5 text-lg text-gray-500 dark:text-gray-400'>
+              Are you sure you want to delete this user?
             </h3>
-            <div className="flex justify-center gap-4">
-              <Button color="red" onClick={handleDeleteuser}>
-                Yes,I'm sure
+            <div className='flex justify-center gap-4'>
+              <Button color='failure' onClick={handleDeleteUser}>
+                Yes, I'm sure
               </Button>
-              <Button color="gray" onClick={() => setShowModal(false)}>
-                No,Cancel
+              <Button color='gray' onClick={() => setShowModal(false)}>
+                No, cancel
               </Button>
             </div>
           </div>
@@ -178,6 +167,4 @@ const DashUsers = () => {
       </Modal>
     </div>
   );
-};
-
-export default DashUsers;
+}

@@ -1,305 +1,233 @@
-// import React, { useEffect, useState } from "react";
-// import Comment from "./Comment";
+import { Alert, Button, Modal,ModalHeader,ModalBody, TextInput, Textarea } from 'flowbite-react';
+import { useEffect, useState } from 'react';
+import { useSelector } from 'react-redux';
+import { Link, useNavigate } from 'react-router-dom';
+import Comment from './Comment'
+import { HiOutlineExclamationCircle } from 'react-icons/hi';
 
-// const CommentSection = ({ postId, currentUser }) => {
-//   const [comments, setComments] = useState([]);
-//   const [newComment, setNewComment] = useState("");
-
-//   // Load comments when page loads
-//   useEffect(() => {
-//     const fetchComments = async () => {
-//       try {
-//         const res = await fetch(
-//           `https://mern-stack-blog-app-8.onrender.com/api/comment/getComments/${postId}`,
-//           {
-//             credentials: "include",
-//           }
-//         );
-//         const data = await res.json();
-//         if (res.ok) setComments(data);
-//       } catch (error) {
-//         console.error("Error loading comments:", error);
-//       }
-//     };
-//     fetchComments();
-//   }, [postId]);
-
-//   // Create comment
-//   const handleSubmit = async (e) => {
-//     e.preventDefault();
-//     if (!newComment.trim()) return;
-
-//     try {
-//       const res = await fetch(
-//         `https://mern-stack-blog-app-8.onrender.com/api/comment/create`,
-//         {
-//           method: "POST",
-//           headers: { "Content-Type": "application/json" },
-//           credentials: "include",
-//           body: JSON.stringify({
-//             content: newComment,
-//             postId,
-//             userId: currentUser?._id,
-//           }),
-//         }
-//       );
-
-//       const data = await res.json();
-//       if (res.ok) {
-//         setComments([data, ...comments]);
-//         setNewComment("");
-//       } else {
-//         console.error("Comment creation failed:", data.message);
-//       }
-//     } catch (error) {
-//       console.error("Error creating comment:", error);
-//     }
-//   };
-
-//   // Like, Edit, Delete handlers
-//   const handleLike = async (commentId) => {
-//     try {
-//       const res = await fetch(
-//         `https://mern-stack-blog-app-8.onrender.com/api/comment/like/${commentId}`,
-//         {
-//           method: "PUT",
-//           credentials: "include",
-//         }
-//       );
-//       if (res.ok) {
-//         setComments((prev) =>
-//           prev.map((c) =>
-//             c._id === commentId
-//               ? {
-//                   ...c,
-//                   likes: c.likes.includes(currentUser._id)
-//                     ? c.likes.filter((id) => id !== currentUser._id)
-//                     : [...c.likes, currentUser._id],
-//                 }
-//               : c
-//           )
-//         );
-//       }
-//     } catch (err) {
-//       console.error("Like error:", err);
-//     }
-//   };
-
-//   const handleEdit = (comment, newContent) => {
-//     setComments((prev) =>
-//       prev.map((c) =>
-//         c._id === comment._id ? { ...c, content: newContent } : c
-//       )
-//     );
-//   };
-
-//   const handleDelete = async (commentId) => {
-//     try {
-//       const res = await fetch(
-//         `https://mern-stack-blog-app-8.onrender.com/api/comment/delete/${commentId}`,
-//         {
-//           method: "DELETE",
-//           credentials: "include",
-//         }
-//       );
-//       if (res.ok) setComments(comments.filter((c) => c._id !== commentId));
-//     } catch (err) {
-//       console.error("Delete error:", err);
-//     }
-//   };
-
-//   return (
-//     <div className="max-w-2xl mx-auto mt-6">
-//       <form onSubmit={handleSubmit} className="mb-4">
-//         <textarea
-//           value={newComment}
-//           onChange={(e) => setNewComment(e.target.value)}
-//           placeholder="Write a comment..."
-//           className="w-full p-3 rounded-lg border border-gray-300 dark:border-gray-600 dark:bg-gray-800 dark:text-white"
-//           rows="3"
-//         />
-//         <button
-//           type="submit"
-//           className="mt-2 px-5 py-2 bg-gradient-to-r from-purple-500 to-pink-500 text-white rounded-lg"
-//         >
-//           Submit
-//         </button>
-//       </form>
-
-//       {comments.length === 0 ? (
-//         <p className="text-gray-500 text-sm">No comments yet!</p>
-//       ) : (
-//         comments.map((comment) => (
-//           <Comment
-//             key={comment._id}
-//             comment={comment}
-//             onLike={handleLike}
-//             onEdit={handleEdit}
-//             onDelete={handleDelete}
-//             currentUser={currentUser}
-//           />
-//         ))
-//       )}
-//     </div>
-//   );
-// };
-
-// export default CommentSection;
-
-import React, { useEffect, useState } from "react";
-import Comment from "./Comment";
-
-const CommentSection = ({ postId, currentUser }) => {
+export default function CommentSection({ postId }) {
+  const { currentUser } = useSelector((state) => state.user);
+  const [comment, setComment] = useState('');
+  const [commentError, setCommentError] = useState(null);
   const [comments, setComments] = useState([]);
-  const [newComment, setNewComment] = useState("");
+  const [showModal, setShowModal] = useState(false);
+  const [commentToDelete, setCommentToDelete] = useState(null);
+  const navigate = useNavigate();
 
-  // Load comments when page loads
-  useEffect(() => {
-    const fetchComments = async () => {
-      try {
-        // ✅ FIXED: correct backend route name: getPostComments
-        const res = await fetch(
-          `https://mern-stack-blog-app-8.onrender.com/api/comment/getPostComments/${postId}`,
-          {
-            credentials: "include",
-          }
-        );
-        const data = await res.json();
-        if (res.ok) setComments(data);
-      } catch (error) {
-        console.error("Error loading comments:", error);
-      }
-    };
-    fetchComments();
-  }, [postId]);
-
-  // Create comment
   const handleSubmit = async (e) => {
     e.preventDefault();
-    if (!newComment.trim()) return;
-
+    if (comment.length > 200) {
+      return;
+    }
     try {
       const res = await fetch(
-        `https://mern-stack-blog-app-8.onrender.com/api/comment/create`,
+        `/api/comment/create`,
         {
-          method: "POST",
-          headers: { "Content-Type": "application/json" },
-          credentials: "include",
+          method: 'POST',
+          credentials: 'include',
+          headers: {
+            'Content-Type': 'application/json',
+          },
           body: JSON.stringify({
-            content: newComment,
+            content: comment,
             postId,
-            userId: currentUser?._id,
+            userId: currentUser._id,
           }),
         }
       );
-
       const data = await res.json();
       if (res.ok) {
+        setComment('');
+        setCommentError(null);
         setComments([data, ...comments]);
-        setNewComment("");
-      } else {
-        console.error("Comment creation failed:", data.message);
       }
     } catch (error) {
-      console.error("Error creating comment:", error);
+      setCommentError(error.message);
     }
   };
 
-  // Like, Edit, Delete handlers
-  const handleLike = async (commentId) => {
-    // ✅ Guard: avoid crashing when user is not logged in
-    if (!currentUser?._id) return;
+  useEffect(() => {
+    const getComments = async () => {
+      try {
+        const res = await fetch(
+          `/api/comment/getPostComments/${postId}`
+        );
+        if (res.ok) {
+          const data = await res.json();
+          setComments(data);
+        }
+      } catch (error) {
+        console.log(error.message);
+      }
+    };
+    getComments();
+  }, [postId]);
 
+  const handleLike = async (commentId) => {
     try {
-      // ✅ FIXED route: likeComment instead of like
+      if (!currentUser) {
+        navigate('/signin');
+        return;
+      }
       const res = await fetch(
-        `https://mern-stack-blog-app-8.onrender.com/api/comment/likeComment/${commentId}`,
+        `/api/comment/likeComment/${commentId}`,
         {
-          method: "PUT",
-          credentials: "include",
+          method: 'PUT',
+          credentials: 'include',
         }
       );
       if (res.ok) {
-        setComments((prev) =>
-          prev.map((c) =>
-            c._id === commentId
+        const data = await res.json();
+        setComments(
+          comments.map((comment) =>
+            comment._id === commentId
               ? {
-                  ...c,
-                  likes: c.likes.includes(currentUser._id)
-                    ? c.likes.filter((id) => id !== currentUser._id)
-                    : [...c.likes, currentUser._id],
-                  numberOfLikes: c.likes.includes(currentUser._id)
-                    ? c.numberOfLikes - 1
-                    : c.numberOfLikes + 1,
+                  ...comment,
+                  likes: data.likes,
+                  numberOfLikes: data.likes.length,
                 }
-              : c
+              : comment
           )
         );
       }
-    } catch (err) {
-      console.error("Like error:", err);
+    } catch (error) {
+      console.log(error.message);
     }
   };
 
-  const handleEdit = (comment, newContent) => {
-    setComments((prev) =>
-      prev.map((c) =>
-        c._id === comment._id ? { ...c, content: newContent } : c
+  const handleEdit = async (comment, editedContent) => {
+    setComments(
+      comments.map((c) =>
+        c._id === comment._id ? { ...c, content: editedContent } : c
       )
     );
   };
 
   const handleDelete = async (commentId) => {
+    setShowModal(false);
     try {
-      // ✅ FIXED route: deleteComment instead of delete
+      if (!currentUser) {
+        navigate('/signin');
+        return;
+      }
       const res = await fetch(
-        `https://mern-stack-blog-app-8.onrender.com/api/comment/deleteComment/${commentId}`,
+        `/api/comment/deleteComment/${commentId}`,
         {
-          method: "DELETE",
-          credentials: "include",
+          method: 'DELETE',
+          credentials: 'include',
         }
       );
-      if (res.ok)
-        setComments((prev) => prev.filter((c) => c._id !== commentId));
-    } catch (err) {
-      console.error("Delete error:", err);
+      if (res.ok) {
+        const data = await res.json();
+        setComments(comments.filter((comment) => comment._id !== commentId));
+      }
+    } catch (error) {
+      console.log(error.message);
     }
   };
-
   return (
-    <div className="max-w-2xl mx-auto mt-6">
-      <form onSubmit={handleSubmit} className="mb-4">
-        <textarea
-          value={newComment}
-          onChange={(e) => setNewComment(e.target.value)}
-          placeholder="Write a comment..."
-          className="w-full p-3 rounded-lg border border-gray-300 dark:border-gray-600 dark:bg-gray-800 dark:text-white"
-          rows="3"
-        />
-        <button
-          type="submit"
-          className="mt-2 px-5 py-2 bg-gradient-to-r from-purple-500 to-pink-500 text-white rounded-lg"
-        >
-          Submit
-        </button>
-      </form>
-
-      {comments.length === 0 ? (
-        <p className="text-gray-500 text-sm">No comments yet!</p>
-      ) : (
-        comments.map((comment) => (
-          <Comment
-            key={comment._id}
-            comment={comment}
-            onLike={handleLike}
-            onEdit={handleEdit}
-            onDelete={handleDelete}
-            currentUser={currentUser}
+    <div className='max-w-2xl mx-auto w-full p-3'>
+      {currentUser ? (
+        <div className='flex items-center gap-1 my-5 text-gray-500 text-sm'>
+          <p>Signed in as:</p>
+          <img
+            className='h-5 w-5 object-cover rounded-full'
+            src={currentUser.profilePicture}
+            alt=''
           />
-        ))
+          <Link
+            to={'/dashboard?tab=profile'}
+            className='text-xs text-cyan-600 hover:underline'
+          >
+            @{currentUser.username}
+          </Link>
+        </div>
+      ) : (
+        <div className='text-sm text-teal-500 my-5 flex gap-1'>
+          You must be signed in to comment.
+          <Link className='text-blue-500 hover:underline' to={'/signin'}>
+            Sign In
+          </Link>
+        </div>
       )}
+      {currentUser && (
+        <form
+          onSubmit={handleSubmit}
+          className='border border-teal-500 rounded-md p-3'
+        >
+          <Textarea
+            placeholder='Add a comment...'
+            rows='3'
+            maxLength='200'
+            onChange={(e) => setComment(e.target.value)}
+            value={comment}
+          />
+          <div className='flex justify-between items-center mt-5'>
+            <p className='text-gray-500 text-xs'>
+              {200 - comment.length} characters remaining
+            </p>
+            <Button outline  type='submit'>
+              Submit
+            </Button>
+          </div>
+          {commentError && (
+            <Alert color='failure' className='mt-5'>
+              {commentError}
+            </Alert>
+          )}
+        </form>
+      )}
+      {comments.length === 0 ? (
+        <p className='text-sm my-5'>No comments yet!</p>
+      ) : (
+        <>
+          <div className='text-sm my-5 flex items-center gap-1'>
+            <p>Comments</p>
+            <div className='border border-gray-400 py-1 px-2 rounded-sm'>
+              <p>{comments.length}</p>
+            </div>
+          </div>
+          {comments.map((comment) => (
+            <Comment
+              key={comment._id}
+              comment={comment}
+              onLike={handleLike}
+              onEdit={handleEdit}
+              onDelete={(commentId) => {
+                setShowModal(true);
+                setCommentToDelete(commentId);
+              }}
+            />
+          ))}
+        </>
+      )}
+      <Modal
+        show={showModal}
+        onClose={() => setShowModal(false)}
+        popup
+        size='md'
+      >
+        <ModalHeader />
+        <ModalBody>
+          <div className='text-center'>
+            <HiOutlineExclamationCircle className='h-14 w-14 text-gray-400 dark:text-gray-200 mb-4 mx-auto' />
+            <h3 className='mb-5 text-lg text-gray-500 dark:text-gray-400'>
+              Are you sure you want to delete this comment?
+            </h3>
+            <div className='flex justify-center gap-4'>
+              <Button
+                color='failure'
+                onClick={() => handleDelete(commentToDelete)}
+              >
+                Yes, I'm sure
+              </Button>
+              <Button color='gray' onClick={() => setShowModal(false)}>
+                No, cancel
+              </Button>
+            </div>
+          </div>
+        </ModalBody>
+      </Modal>
     </div>
   );
-};
-
-export default CommentSection;
+}

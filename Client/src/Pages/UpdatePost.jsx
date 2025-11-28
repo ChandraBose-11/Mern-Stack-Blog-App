@@ -1,265 +1,225 @@
-import { Button, FileInput, Select, Alert, TextInput } from "flowbite-react";
-import React, { useState, useEffect } from "react";
+import { Alert, Button, FileInput, Select, TextInput } from "flowbite-react";
 import ReactQuill from "react-quill-new";
 import "react-quill-new/dist/quill.snow.css";
-import { useNavigate, useParams } from "react-router-dom";
+import { useEffect, useState } from "react";
 import { CircularProgressbar } from "react-circular-progressbar";
 import "react-circular-progressbar/dist/styles.css";
-import axios from "axios";
+import { useNavigate, useParams } from "react-router-dom";
+import { useSelector } from "react-redux";
 
-const CATEGORY_OPTIONS = [
-  { value: "Uncategoried", label: "Uncategoried" },
-  { value: "technology", label: "Technology" },
-  { value: "lifestyle", label: "Lifestyle" },
-  { value: "business", label: "Business & Finance" },
-  { value: "education", label: "Education" },
-  { value: "entertainment", label: "Entertainment" },
-  { value: "news", label: "News" },
-];
+export default function UpdatePost() {
+  const [file, setFile] = useState(null);
+  const [imageUploadProgress, setImageUploadProgress] = useState(null);
+  const [imageUploadError, setImageUploadError] = useState(null);
+  const [publishError, setPublishError] = useState(null);
+  const [formData, setFormData] = useState({});
 
-const UpdatePost = () => {
   const { postId } = useParams();
   const navigate = useNavigate();
+  const { currentUser } = useSelector((state) => state.user);
 
-  const [file, setFile] = useState(null);
-  const [uploadProgress, setUploadProgress] = useState(null);
-  const [formData, setFormData] = useState(null);
-  const [originalData, setOriginalData] = useState(null);
-  const [publishError, setPublishError] = useState(null);
-  const [successMessage, setSuccessMessage] = useState(null);
-  const [noChangeWarning, setNoChangeWarning] = useState(null);
- 
-
+  // ================================
+  // FETCH POST TO EDIT
+  // ================================
   useEffect(() => {
-    if (!postId) return;
-
     const fetchPost = async () => {
       try {
-        const res = await axios.get(`https://mern-stack-blog-app-8.onrender.com/api/post/${postId}`);
-        const post = res.data?.post || res.data;
+        const res = await fetch(`/api/post/${postId}`, {
+          credentials: "include",
+        });
+        const data = await res.json();
 
-        if (!post) {
-          setPublishError("Failed to fetch post data");
+        if (!res.ok) {
+          setPublishError(data.message);
           return;
         }
 
-        const matchedCategory =
-          CATEGORY_OPTIONS.find(
-            (opt) =>
-              opt.value.toLowerCase() === (post.category || "").toLowerCase()
-          )?.value || "Uncategoried";
-
-        const normalized = {
-          title: post.title || "",
-          content: post.content || "",
-          category: matchedCategory,
-          image: post.image || null,
-        };
-
-        setFormData(normalized);
-        setOriginalData(normalized);
-        if (post.image) setFile(post.image);
-      } catch (err) {
-        setPublishError("Failed to fetch post data");
+        setFormData(data);
+        setPublishError(null);
+      } catch (error) {
+        console.log(error);
+        setPublishError("Failed to fetch post");
       }
     };
 
     fetchPost();
   }, [postId]);
 
-  const handleSubmit = (e) => {
+  // ================================
+  // UPLOAD IMAGE (Cloudinary)
+  // ================================
+  const handleUploadImage = async () => {
+    try {
+      if (!file) {
+        setImageUploadError("Please select an image");
+        return;
+      }
+
+      setImageUploadError(null);
+      setImageUploadProgress("Uploading...");
+
+      const form = new FormData();
+      form.append("image", file);
+
+      const res = await fetch(`/api/post/create-image`, {
+        method: "POST",
+        credentials: "include",
+        body: form,
+      });
+
+      const data = await res.json();
+
+      if (!res.ok) {
+        setImageUploadError(data.msg || "Image upload failed");
+        setImageUploadProgress(null);
+        return;
+      }
+
+      // Save Cloudinary URL
+      setFormData({ ...formData, image: data.imageUrl });
+
+      setImageUploadProgress(null);
+    } catch (error) {
+      setImageUploadError("Image upload failed");
+      setImageUploadProgress(null);
+    }
+  };
+
+  // ================================
+  // SUBMIT UPDATED POST
+  // ================================
+  const handleSubmit = async (e) => {
     e.preventDefault();
-    if (!formData) return;
 
-    setPublishError(null);
-    setSuccessMessage(null);
-    setNoChangeWarning(null);
-
-    const isSameTitle = formData.title === originalData.title;
-    const isSameContent = formData.content === originalData.content;
-    const isSameCategory = formData.category === originalData.category;
-    const isSameImage =
-      file instanceof File ? false : file === originalData.image;
-
-    if (isSameTitle && isSameContent && isSameCategory && isSameImage) {
-      setNoChangeWarning(
-        "⚠️ No changes detected. Please edit something before saving."
-      );
+    if (!formData.title || !formData.content) {
+      setPublishError("Title and content are required");
       return;
     }
 
     try {
-      const data = new FormData();
-      data.append("title", formData.title);
-      data.append("content", formData.content);
-      data.append("category", formData.category);
-      if (file && file instanceof File) data.append("image", file);
+      const form = new FormData();
 
-      const xhr = new XMLHttpRequest();
-      xhr.open("PUT", `https://mern-stack-blog-app-8.onrender.com/api/post/update/${postId}`);
-      xhr.withCredentials = true;
-      xhr.upload.onprogress = (event) => {
-        if (event.lengthComputable)
-          setUploadProgress(Math.round((event.loaded / event.total) * 100));
-      };
+      form.append("title", formData.title);
+      form.append("content", formData.content);
+      form.append("category", formData.category || "uncategorized");
 
-      xhr.onload = () => {
-        const res = JSON.parse(xhr.responseText);
-        if (xhr.status !== 200) {
-          setPublishError(res.message);
-        } else {
-          setSuccessMessage("✅ Post updated successfully!");
-          setTimeout(() => navigate(`/post/${res.slug}`), 1500);
-        }
-        setUploadProgress(null);
-      };
+      // If image updated or exists → send URL
+      if (formData.image) {
+        form.append("image", formData.image);
+      }
 
-      xhr.onerror = () => {
-        setPublishError("Something went wrong");
-        setUploadProgress(null);
-      };
+      const res = await fetch(`/api/post/update/${postId}`, {
+        method: "PUT",
+        credentials: "include",
+        body: form,
+      });
 
-      xhr.send(data);
-    } catch (err) {
+      const data = await res.json();
+
+      if (!res.ok) {
+        setPublishError(data.message || "Failed to update post");
+        return;
+      }
+
+      setPublishError(null);
+
+      navigate(`/post/${data.slug}`);
+    } catch (error) {
       setPublishError("Something went wrong");
-      setUploadProgress(null);
     }
   };
 
-  if (!formData)
-    return <div className="p-6 text-center text-gray-500">Loading post...</div>;
-
   return (
-    <div className="min-h-screen bg-gradient-to-br from-indigo-100 via-white to-pink-100 dark:from-gray-900 dark:via-gray-800 dark:to-gray-900 px-6 py-10 flex justify-center">
-      <div className="w-full max-w-6xl grid grid-cols-1 md:grid-cols-2 gap-8">
-        {/* Left Section */}
-        <div className="backdrop-blur-xl bg-white/60 dark:bg-gray-800/60 rounded-2xl shadow-xl p-8 flex flex-col justify-between border border-gray-200 dark:border-gray-700">
-          <div>
-            <h1 className="text-4xl font-bold text-gray-900 dark:text-white mb-3">
-              ✍️ Update Your Post
-            </h1>
-            <p className="text-gray-600 dark:text-gray-400 mb-6">
-              Give your blog a fresh update — refine your content and make it
-              shine.
-            </p>
+    <div className="p-3 max-w-3xl mx-auto min-h-screen">
+      <h1 className="text-center text-3xl my-7 font-semibold">Update post</h1>
 
-            <TextInput
-              type="text"
-              placeholder="Enter post title"
-              value={formData.title}
-              required
-              onChange={(e) =>
-                setFormData({ ...formData, title: e.target.value })
-              }
-              className="mb-4"
-            />
+      <form className="flex flex-col gap-4" onSubmit={handleSubmit}>
+        
+        {/* Title + Category */}
+        <div className="flex flex-col gap-4 sm:flex-row justify-between">
+          
+          <TextInput
+            type="text"
+            placeholder="Title"
+            required
+            className="flex-1"
+            value={formData.title || ""}
+            onChange={(e) =>
+              setFormData({ ...formData, title: e.target.value })
+            }
+          />
 
-            <Select
-              value={formData.category}
-              onChange={(e) =>
-                setFormData({ ...formData, category: e.target.value })
-              }
-              className="mb-4"
-            >
-              <option value="" disabled>
-                Select Category
-              </option>
-              {CATEGORY_OPTIONS.map((opt) => (
-                <option key={opt.value} value={opt.value}>
-                  {opt.label}
-                </option>
-              ))}
-            </Select>
+          <Select
+            value={formData.category || "uncategorized"}
+            onChange={(e) =>
+              setFormData({ ...formData, category: e.target.value })
+            }
+          >
+            <option value="uncategorized">Select a category</option>
+            <option value="javascript">JavaScript</option>
+            <option value="reactjs">React.js</option>
+            <option value="nextjs">Next.js</option>
+          </Select>
 
-            <div className="border border-dashed border-gray-400 dark:border-gray-600 rounded-xl p-4">
-              <FileInput
-                type="file"
-                accept="image/*"
-                onChange={(e) => {
-                  if (e.target.files && e.target.files[0])
-                    setFile(e.target.files[0]);
-                }}
-              />
-              <p className="text-xs text-gray-500 mt-2">
-                Upload or replace the featured image
-              </p>
-            </div>
+        </div>
 
-            {uploadProgress !== null && (
-              <div className="mt-4 w-20 h-20 mx-auto">
-                <CircularProgressbar
-                  value={uploadProgress}
-                  text={`${uploadProgress}%`}
-                />
-              </div>
-            )}
-          </div>
+        {/* Image Upload UI */}
+        <div className="flex gap-4 items-center justify-between border-4 border-teal-500 border-dotted p-3">
 
-          {file && (
-            <img
-              src={file instanceof File ? URL.createObjectURL(file) : file}
-              alt="Preview"
-              className="mt-6 rounded-xl shadow-lg object-cover h-56 w-full"
-            />
-          )}
+          <FileInput
+            type="file"
+            accept="image/*"
+            onChange={(e) => setFile(e.target.files[0])}
+          />
 
           <Button
-            onClick={() => navigate(-1)}
+            type="button"
+            gradientDuoTone="purpleToBlue"
+            size="sm"
             outline
-            color="gray"
-            className="mt-6 hover:scale-105 transition-all"
+            disabled={imageUploadProgress}
+            onClick={handleUploadImage}
           >
-            ← Back to Posts
+            {imageUploadProgress ? imageUploadProgress : "Upload Image"}
           </Button>
+
         </div>
-        {/* Right Section */}
-        <div className="bg-white/80 dark:bg-gray-800/80 backdrop-blur-md rounded-2xl shadow-xl p-8 flex flex-col border border-gray-200 dark:border-gray-700">
-          <form onSubmit={handleSubmit} className="flex flex-col h-full">
-            <h2 className="text-2xl font-semibold text-gray-800 dark:text-gray-100 mb-4">
-              ✨ Content Editor
-            </h2>
 
-            <div className="flex-grow border border-gray-300 dark:border-gray-600 rounded-lg overflow-hidden mb-6">
-              <ReactQuill
-                theme="snow"
-                value={formData.content}
-                onChange={(value) =>
-                  setFormData({ ...formData, content: value })
-                }
-                className="h-72"
-                placeholder="Start improving your content..."
-                required
-              />
-            </div>
+        {/* Errors */}
+        {imageUploadError && (
+          <Alert color="failure">{imageUploadError}</Alert>
+        )}
 
-            <Button
-              type="submit"
-              disabled={uploadProgress !== null}
-              className="bg-gradient-to-r from-indigo-500 via-purple-500 to-pink-500 text-white hover:opacity-90 transition-all py-2 text-lg font-semibold rounded-lg shadow-md"
-            >
-              💾 Save Changes
-            </Button>
+        {/* Preview */}
+        {formData.image && (
+          <img
+            src={formData.image}
+            alt="post"
+            className="w-full h-72 object-cover"
+          />
+        )}
 
-            {publishError && (
-              <Alert className="mt-5" color="failure">
-                {publishError}
-              </Alert>
-            )}
-            {successMessage && (
-              <Alert className="mt-5" color="success">
-                {successMessage}
-              </Alert>
-            )}
-            {noChangeWarning && (
-              <Alert className="mt-5" color="warning">
-                {noChangeWarning}
-              </Alert>
-            )}
-          </form>
-        </div>
-      </div>
+        {/* Content Editor */}
+        <ReactQuill
+          theme="snow"
+          placeholder="Write something..."
+          className="h-72 mb-12"
+          value={formData.content || ""}
+          onChange={(value) => setFormData({ ...formData, content: value })}
+        />
+
+        {/* Submit */}
+        <Button type="submit" gradientDuoTone="purpleToPink">
+          Update post
+        </Button>
+
+        {publishError && (
+          <Alert className="mt-5" color="failure">
+            {publishError}
+          </Alert>
+        )}
+
+      </form>
     </div>
   );
-};
-
-export default UpdatePost;
+}

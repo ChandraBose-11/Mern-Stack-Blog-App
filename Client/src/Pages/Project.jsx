@@ -1,113 +1,42 @@
-import React, { useEffect, useState } from "react";
-import PostCard from "../Components/PostCard";
-import { Spinner } from "flowbite-react";
+import CallToAction from '../Components/CallToAction';
 
-const Project = () => {
-  const [posts, setPosts] = useState([]);
-  const [loading, setLoading] = useState(true);
-  const [error, setError] = useState(false);
-
-
-  // Fetch all posts
-  useEffect(() => {
-    const fetchPosts = async () => {
-      try {
-        setLoading(true);
-        setError(false);
-        const res = await fetch(`https://mern-stack-blog-app-8.onrender.com/api/post/getposts`,{credentials:"include"});
-        const data = await res.json();
-        if (!res.ok) throw new Error("Failed to fetch posts");
-        setPosts(data.posts || data.post || []);
-      } catch (err) {
-        console.error(err);
-        setError(true);
-      } finally {
-        setLoading(false);
-      }
-    };
-    fetchPosts();
-  }, []);
-
-  if (loading)
-    return (
-      <div className="flex justify-center items-center min-h-screen bg-white dark:bg-[#0f172a]">
-        <Spinner size="xl" />
-      </div>
-    );
-
-  if (error)
-    return (
-      <div className="flex justify-center items-center min-h-screen text-red-500 bg-white dark:bg-[#0f172a]">
-        Failed to load posts 😢
-      </div>
-    );
-
+export default function Projects() {
   return (
-    <main
-      className="
-        relative min-h-screen px-6 py-16 overflow-hidden
-        bg-white text-gray-800
-        dark:bg-[#0f172a] dark:text-gray-100
-        transition-colors duration-500 
-      "
-    >
-      {/* Floating background blobs */}
-      <div className="absolute top-10 -left-20 w-72 h-72 bg-pink-300/30 dark:bg-pink-500/20 rounded-full blur-3xl animate-float-slow -z-10"></div>
-      <div className="absolute bottom-20 -right-20 w-96 h-96 bg-blue-300/20 dark:bg-blue-600/20 rounded-full blur-3xl animate-float-slow delay-200 -z-10"></div>
-
-      {/* Title Section */}
-      <div className="text-center mb-14 animate-fade-in">
-        <h1
-          className="
-            text-4xl md:text-5xl font-extrabold font-serif mb-4
-            text-gray-800 dark:text-white
-          "
-        >
-          Our Latest Projects
-        </h1>
-        <p className="text-gray-600 dark:text-gray-300 max-w-2xl mx-auto">
-          Explore a collection of our most recent articles, stories, and
-          innovations — crafted with passion and creativity.
-        </p>
+    <div className='min-h-screen max-w-4xl mx-auto flex justify-center gap-8 items-center flex-col p-6'>
+      <h1 className='text-4xl font-bold text-center'>Explore Our Projects</h1>
+      <p className='text-lg text-gray-600 text-center max-w-3xl'>
+        Dive into a collection of fun and engaging projects designed to help you
+        learn and master HTML, CSS, and JavaScript. Whether you're a beginner or
+        an experienced developer, these projects will challenge your skills and
+        inspire creativity. Start building today and take your development
+        journey to the next level!
+      </p>
+      <div className='w-full flex flex-col gap-6'>
+        <section className='bg-gray-100 p-6 rounded-lg shadow-md'>
+          <h2 className='text-2xl font-semibold dark:text-gray-900'>
+            Why Build Projects?
+          </h2>
+          <p className='text-gray-700 mt-2'>
+            Building projects is one of the best ways to learn programming. It
+            allows you to apply theoretical knowledge in a practical way, solve
+            real-world problems, and create a portfolio that showcases your
+            skills to potential employers or clients.
+          </p>
+        </section>
+        <section className='bg-gray-100 p-6 rounded-lg shadow-md'>
+          <h2 className='text-2xl font-semibold dark:text-gray-900'>
+            What You'll Learn
+          </h2>
+          <ul className='list-disc list-inside text-gray-700 mt-2'>
+            <li>How to structure HTML for clean and semantic code</li>
+            <li>Styling with CSS to create visually appealing designs</li>
+            <li>Adding interactivity with JavaScript</li>
+            <li>Debugging and problem-solving techniques</li>
+            <li>Best practices for responsive and accessible web design</li>
+          </ul>
+        </section>
       </div>
-
-      {/* Post Grid */}
-      {posts.length === 0 ? (
-        <p className="text-center text-gray-500 dark:text-gray-400 text-lg">
-          No projects available.
-        </p>
-      ) : (
-        <div
-          className="
-            grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4
-            gap-8 max-w-7xl mx-auto animate-fade-in delay-300
-          "
-        >
-          {posts.map((post) => (
-            <div
-              key={post._id}
-              className="
-                transform transition-all duration-300
-                hover:scale-[1.03] hover:shadow-xl hover:-translate-y-1
-              "
-            >
-              <PostCard post={post} />
-            </div>
-          ))}
-        </div>
-      )}
-
-      {/* Decorative Divider */}
-      <div className="mt-16 flex justify-center">
-        <div
-          className="
-            h-1 w-32 rounded-full animate-pulse
-            bg-gradient-to-r from-purple-400 via-pink-400 to-blue-400
-          "
-        ></div>
-      </div>
-    </main>
+      <CallToAction />
+    </div>
   );
-};
-
-export default Project;
+}

@@ -1,232 +1,169 @@
-import { Button, FileInput, Select, Alert, TextInput } from "flowbite-react";
-import React, { useState, useEffect } from "react";
+import { Alert, Button, FileInput, Select, TextInput } from "flowbite-react";
 import ReactQuill from "react-quill-new";
 import "react-quill-new/dist/quill.snow.css";
+import { useState } from "react";
 import { useNavigate } from "react-router-dom";
-import { CircularProgressbar } from "react-circular-progressbar";
-import "react-circular-progressbar/dist/styles.css";
-import { motion } from "framer-motion";
 
-const CreatePost = () => {
-  const navigate = useNavigate();
+export default function CreatePost() {
   const [file, setFile] = useState(null);
-  const [uploadProgress, setUploadProgress] = useState(null);
+  const [imageUploadProgress, setImageUploadProgress] = useState(null);
+  const [imageUploadError, setImageUploadError] = useState(null);
+  const [formData, setFormData] = useState({});
   const [publishError, setPublishError] = useState(null);
-  const [successMessage, setSuccessMessage] = useState(null);
 
+  const navigate = useNavigate();
 
-  const [formData, setFormData] = useState({
-    title: "",
-    summary: "",
-    content: "",
-    category: "Uncategoried",
-  });
-
-  // ✅ Load saved draft
-  useEffect(() => {
-    const savedDraft = localStorage.getItem("draftPost");
-    if (savedDraft) setFormData(JSON.parse(savedDraft));
-  }, []);
-
-  // ✅ Auto-save draft
-  useEffect(() => {
-    localStorage.setItem("draftPost", JSON.stringify(formData));
-  }, [formData]);
-
-  // ✅ Submit with progress
-  const handleSubmit = async (e) => {
-    e.preventDefault();
-    setPublishError(null);
-    setSuccessMessage(null);
-
+  // Upload only image file
+  const handleUploadImage = async () => {
     try {
-      const data = new FormData();
-      data.append("title", formData.title);
-      data.append("summary", formData.summary);
-      data.append("content", formData.content);
-      data.append("category", formData.category);
-      if (file) data.append("image", file);
+      if (!file) {
+        setImageUploadError("Please select an image");
+        return;
+      }
 
-      const xhr = new XMLHttpRequest();
-      xhr.open(
-        "POST",
-        `https://mern-stack-blog-app-8.onrender.com/api/post/create`
-      );
-      xhr.withCredentials = true;
-      xhr.upload.onprogress = (event) => {
-        if (event.lengthComputable) {
-          setUploadProgress(Math.round((event.loaded / event.total) * 100));
-        }
-      };
+      setImageUploadError(null);
+      setImageUploadProgress("Uploading...");
 
-      xhr.onload = () => {
-        const res = JSON.parse(xhr.responseText);
-        if (xhr.status !== 201) {
-          setPublishError(res.message);
-        } else {
-          setSuccessMessage(" 🎉 Post created successfully!");
-          localStorage.removeItem("draftPost");
-          setTimeout(() => navigate(`/post/${res.slug}`), 1500);
-        }
-        setUploadProgress(null);
-      };
+      const form = new FormData();
+      form.append("image", file);
 
-      xhr.onerror = () => {
-        setPublishError("Something went wrong");
-        setUploadProgress(null);
-      };
+      const res = await fetch(`/api/post/create-image`, {
+        method: "POST",
+        credentials: "include",
+        body: form,
+      });
 
-      xhr.send(data);
-    } catch {
-      setPublishError("Something went wrong");
-      setUploadProgress(null);
+      const data = await res.json();
+
+      if (!res.ok) {
+        setImageUploadError(data.msg || "Upload failed");
+        setImageUploadProgress(null);
+        return;
+      }
+
+      setFormData({ ...formData, image: data.imageUrl });
+      setImageUploadProgress(null);
+    } catch (err) {
+      console.log(err);
+      setImageUploadError("Upload failed");
+      setImageUploadProgress(null);
     }
   };
 
-  // ✅ Drag & drop image
-  const handleDrop = (e) => {
+  // Submit entire post
+  const handleSubmit = async (e) => {
     e.preventDefault();
-    if (e.dataTransfer.files?.[0]) setFile(e.dataTransfer.files[0]);
+
+    if (!formData.title || !formData.content) {
+      setPublishError("Title and content are required");
+      return;
+    }
+
+    try {
+      const form = new FormData();
+      form.append("title", formData.title);
+      form.append("content", formData.content);
+      form.append("category", formData.category || "uncategorized");
+
+      if (formData.image) form.append("image", formData.image);
+
+      const res = await fetch(`/api/post/create`, {
+        method: "POST",
+        credentials: "include",
+        body: form,
+      });
+
+      const data = await res.json();
+
+      if (!res.ok) {
+        setPublishError(data.message || "Failed to publish");
+        return;
+      }
+
+      setPublishError(null);
+      navigate(`/post/${data.slug}`);
+    } catch (error) {
+      setPublishError("Something went wrong");
+    }
   };
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-indigo-50 via-white to-pink-50 dark:from-gray-900 dark:via-gray-950 dark:to-gray-900 py-12 px-4 transition-colors duration-300">
-      {/* Header */}
-      <div className="max-w-6xl mx-auto mb-8 flex flex-col md:flex-row justify-between items-center">
-        <div>
-          <h1 className="text-3xl font-bold text-gray-800 dark:text-white">
-            ✨ Create New Blog Post
-          </h1>
-          <p className="text-gray-500 dark:text-gray-400 mt-1">
-            Write and publish your latest article
-          </p>
-        </div>
-        <Button
-          onClick={() => navigate(-1)}
-          outline
-          color="gray"
-          className="hover:scale-105 transition-transform mt-4 md:mt-0"
-        >
-          ← Back to Dashboard
-        </Button>
-      </div>
+    <div className="p-3 max-w-3xl mx-auto min-h-screen">
+      <h1 className="text-center text-3xl my-7 font-semibold">Create a post</h1>
 
-      {/* Form */}
-      <motion.div
-        initial={{ opacity: 0, y: 30 }}
-        animate={{ opacity: 1, y: 0 }}
-        transition={{ duration: 0.6, ease: "easeOut" }}
-        className="max-w-4xl mx-auto bg-white/80 dark:bg-gray-800/80 backdrop-blur-md shadow-lg rounded-2xl p-8 border border-gray-200 dark:border-gray-700 transition-colors duration-300"
-      >
-        <form className="flex flex-col gap-6" onSubmit={handleSubmit}>
-          {/* Title */}
+      <form className="flex flex-col gap-4" onSubmit={handleSubmit}>
+        {/* Title + Category */}
+        <div className="flex flex-col gap-4 sm:flex-row justify-between">
           <TextInput
             type="text"
-            placeholder="Enter post title"
-            value={formData.title}
+            placeholder="Title"
             required
-            className="text-lg dark:bg-gray-900 dark:text-gray-100 dark:border-gray-700"
+            id="title"
+            className="flex-1"
             onChange={(e) =>
               setFormData({ ...formData, title: e.target.value })
             }
           />
 
-          {/* Summary */}
-          <TextInput
-            type="text"
-            placeholder="Short summary (optional)"
-            value={formData.summary}
-            className="dark:bg-gray-900 dark:text-gray-100 dark:border-gray-700"
-            onChange={(e) =>
-              setFormData({ ...formData, summary: e.target.value })
-            }
-          />
-
-          {/* Category */}
           <Select
-            className="text-lg dark:bg-gray-900 dark:text-gray-100 dark:border-gray-700"
-            value={formData.category}
             onChange={(e) =>
               setFormData({ ...formData, category: e.target.value })
             }
           >
-            <option value="Uncategoried">🗂️ Select A Category</option>
-            <option value="technology">💻 Technology</option>
-            <option value="lifestyle">🌿 Lifestyle</option>
-            <option value="business">💼 Business & Finance</option>
-            <option value="education">📚 Education</option>
-            <option value="entertainment">🎬 Entertainment</option>
-            <option value="news">📰 News</option>
+            <option value="uncategorized">Select a category</option>
+            <option value="javascript">JavaScript</option>
+            <option value="reactjs">React.js</option>
+            <option value="nextjs">Next.js</option>
           </Select>
+        </div>
 
-          {/* Image Upload */}
-          <div
-            onDrop={handleDrop}
-            onDragOver={(e) => e.preventDefault()}
-            className="border-2 border-dashed border-purple-400 dark:border-purple-600 rounded-xl p-6 text-center cursor-pointer hover:border-purple-600 hover:bg-purple-50/40 dark:hover:bg-gray-800/50 transition"
-          >
-            <p className="text-gray-500 dark:text-gray-300 mb-2">
-              Drag & drop image here, or click to upload
-            </p>
-            <FileInput
-              type="file"
-              accept="image/*"
-              onChange={(e) => setFile(e.target.files[0])}
-              className="dark:text-gray-100"
-            />
-            {uploadProgress !== null && (
-              <div className="mx-auto mt-4 w-16 h-16">
-                <CircularProgressbar
-                  value={uploadProgress}
-                  text={`${uploadProgress}%`}
-                />
-              </div>
-            )}
-          </div>
+        {/* Image Upload */}
+        <div className="flex gap-4 items-center justify-between border-4 border-teal-500 border-dotted p-3">
+          <FileInput type="file" accept="image/*" onChange={(e) => setFile(e.target.files[0])} />
 
-          {file && (
-            <img
-              src={URL.createObjectURL(file)}
-              alt="preview"
-              className="w-full h-72 object-cover rounded-xl shadow-md border border-gray-200 dark:border-gray-700"
-            />
-          )}
-
-          {/* Post Content */}
-          <div className="dark:text-white">
-            <ReactQuill
-              theme="snow"
-              placeholder="Write something inspiring..."
-              className="h-72 mb-12 rounded-xl quill-dark-mode"
-              value={formData.content}
-              required
-              onChange={(value) => setFormData({ ...formData, content: value })}
-            />
-          </div>
-
-          {/* Publish Button */}
           <Button
-            type="submit"
-            className="bg-gradient-to-r from-purple-600 to-pink-500 text-white font-semibold text-lg py-2 rounded-xl shadow-md hover:shadow-lg transition-transform hover:-translate-y-0.5"
+            type="button"
+            gradientDuoTone="purpleToBlue"
+            size="sm"
+            outline
+            onClick={handleUploadImage}
+            disabled={imageUploadProgress}
           >
-            Publish Post
+            {imageUploadProgress ? imageUploadProgress : "Upload Image"}
           </Button>
+        </div>
 
-          {/* Alerts */}
-          {publishError && (
-            <Alert color="failure" onDismiss={() => setPublishError(null)}>
-              {publishError}
-            </Alert>
-          )}
-          {successMessage && (
-            <Alert color="success" onDismiss={() => setSuccessMessage(null)}>
-              {successMessage}
-            </Alert>
-          )}
-        </form>
-      </motion.div>
+        {imageUploadError && <Alert color="failure">{imageUploadError}</Alert>}
+
+        {formData.image && (
+          <img
+            src={formData.image}
+            alt="upload"
+            className="w-full h-72 object-cover"
+          />
+        )}
+
+        {/* Content */}
+        <ReactQuill
+          theme="snow"
+          placeholder="Write something..."
+          className="h-72 mb-12"
+          required
+          onChange={(value) => {
+            setFormData({ ...formData, content: value });
+          }}
+        />
+
+        <Button type="submit" gradientDuoTone="purpleToPink">
+          Publish
+        </Button>
+
+        {publishError && (
+          <Alert className="mt-5" color="failure">
+            {publishError}
+          </Alert>
+        )}
+      </form>
     </div>
   );
-};
-
-export default CreatePost;
+}

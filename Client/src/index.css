@@ -6,108 +6,70 @@
 
 @custom-variant dark (&:where(.dark, .dark *));
 
-body{
-    height: 100vh;
-    font-weight:font-extrabold;
-    font-family:  font-serif;
-}
-.ql-editor{
-    font-size: 1.05rem;
+body {
+  height: 100vh;
 }
 
-/* About page css */
-
-
-/* Project page style */
-.group:hover {
-  box-shadow: 0 0 20px rgba(251, 191, 36, 0.4); /* amber glow */
+.ql-editor {
+  font-size: 1.05rem;
 }
 
-.dark .group:hover {
-  box-shadow: 0 0 25px rgba(253, 224, 71, 0.4); /* yellow glow */
+.post-content p {
+  margin-bottom: 0.5rem;
 }
 
-/* signin page  */
-@keyframes fadeIn {
-  from {
-    opacity: 0;
-    transform: translateY(30px);
-  }
-  to {
-    opacity: 1;
-    transform: translateY(0);
-  }
+.post-content h1 {
+  font-size: 1.5rem;
+  font-weight: 600;
+  font-family: sans-serif;
+  margin: 1.5rem 0;
 }
-.animate-fadeIn {
-  animation: fadeIn 1.2s ease forwards;
+.post-content h2 {
+  font-size: 1.4rem;
+  font-family: sans-serif;
+  margin: 1.5rem 0;
 }
 
-
-/* === ReactQuill Dark Mode Fix === */
-
-.dark .ql-container {
-  background-color: #374151 !important;
-  border-color: #374151 !important;
-  color: #fff !important;
+.post-content ul li {
+  margin: 1.15rem 0;
+  margin-left: 1.3rem;
+  list-style-type: circle;
 }
 
-.dark .ql-editor {
-  color: #fff !important;
+.post-content ol li {
+  margin: 1.15rem 0;
+  margin-left: 1.3rem;
+  list-style-type: decimal;
 }
 
-/* Placeholder */
-.dark .ql-editor.ql-blank::before {
-  color: #aaa !important;
+.post-content a {
+  /* light blue */
+  color: rgb(73, 149, 199);
+  text-decoration: none;
 }
 
-/* Toolbar */
-.dark .ql-toolbar {
-  background-color: #374151 !important;
-  border-color: black !important;
-}
-.dark .ql-toolbar .ql-stroke {
-  stroke: #ddd !important;
-}
-.dark .ql-toolbar .ql-fill {
-  fill: #ddd !important;
-}
-.dark .ql-toolbar .ql-picker {
-  color: #ddd !important;
-}
-.dark .ql-toolbar button:hover .ql-stroke,
-.dark .ql-toolbar button.ql-active .ql-stroke {
-  stroke: #a855f7 !important;
+.post-content a:hover {
+  text-decoration: underline;
 }
 
- /* Custom Keyframes for floating background elements */
-                @keyframes float {
-                    0% { transform: translate(0, 0) rotate(0deg); }
-                    50% { transform: translate(20px, 30px) rotate(5deg); }
-                    100% { transform: translate(0, 0) rotate(0deg); }
-                }
-                @keyframes float-reverse {
-                    0% { transform: translate(0, 0) rotate(0deg); }
-                    50% { transform: translate(-25px, -15px) rotate(-3deg); }
-                    100% { transform: translate(0, 0) rotate(0deg); }
-                }
-                .animate-float { animation: float 15s ease-in-out infinite; }
-                .animate-float-reverse { animation: float-reverse 18s ease-in-out infinite; }
-                
-                /* Custom Keyframes for hero text shine effect */
-                @keyframes textShine {
-                    0% { background-position: 0% 50%; }
-                    100% { background-position: 100% 50%; }
-                }
-                .animate-textShine {
-                    background-size: 200% auto;
-                    animation: textShine 4s linear infinite alternate;
-                }
-                
-                /* Custom Keyframes for hero underline */
-                @keyframes slideIn {
-                    0% { width: 0; }
-                    100% { width: 100%; }
-                }
-                .animate-slideIn {
-                    animation: slideIn 1s ease-out 1.5s forwards;
-                }
+.post-content pre {
+  background-color: rgb(30, 41, 59);
+  border: 1px solid rgb(61, 69, 83);
+  color: rgb(232, 231, 231);
+  white-space: pre-wrap;
+  padding: 0.5rem;
+  border-radius: 0.5rem;
+  margin-bottom: 0.5rem;
+}
+
+.post-content code {
+  background-color: rgb(236, 236, 236);
+  padding: 0.25rem;
+  border-radius: 0.25rem;
+  font-size: 0.9rem;
+}
+
+.dark .post-content code {
+  background-color: rgb(30, 41, 59);
+  border: 1px solid rgb(61, 69, 83);
+}
