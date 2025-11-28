@@ -62,7 +62,7 @@ export default function CreatePost() {
     e.preventDefault();
     try {
       const res = await fetch(
-        `${import.meta.env.VITE_API_URL}/api/post/create`,
+        `https://mern-stack-blog-app-render.onrender.com/api/post/create`,
         {
           method: 'POST',
           credentials: 'include',

@@ -13,7 +13,7 @@ export default function Comment({ comment, onLike, onEdit, onDelete }) {
     const getUser = async () => {
       try {
         const res = await fetch(
-          `${import.meta.env.VITE_API_URL}/api/user/${comment.userId}`
+          `https://mern-stack-blog-app-render.onrender.com/api/user/${comment.userId}`
         );
         const data = await res.json();
         if (res.ok) {
@@ -34,7 +34,7 @@ export default function Comment({ comment, onLike, onEdit, onDelete }) {
   const handleSave = async () => {
     try {
       const res = await fetch(
-        `${import.meta.env.VITE_API_URL}/api/comment/editComment/${
+        `https://mern-stack-blog-app-render.onrender.com/api/comment/editComment/${
           comment._id
         }`,
         {

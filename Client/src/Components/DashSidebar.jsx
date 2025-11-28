@@ -28,7 +28,7 @@ export default function DashSidebar() {
   const handleSignout = async () => {
     try {
       const res = await fetch(
-        `${import.meta.env.VITE_API_URL}/api/user/signout`,
+        `https://mern-stack-blog-app-render.onrender.com/api/user/signout`,
         {
           method: 'POST',
           credentials: 'include',

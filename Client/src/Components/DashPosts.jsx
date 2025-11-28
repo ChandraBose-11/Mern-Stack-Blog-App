@@ -14,7 +14,7 @@ export default function DashPosts() {
     const fetchPosts = async () => {
       try {
         const res = await fetch(
-          `${import.meta.env.VITE_API_URL}/api/post/getposts?userId=${
+          `https://mern-stack-blog-app-render.onrender.com/api/post/getposts?userId=${
             currentUser._id
           }`,
           {
@@ -41,7 +41,7 @@ export default function DashPosts() {
     const startIndex = userPosts.length;
     try {
       const res = await fetch(
-        `${import.meta.env.VITE_API_URL}/api/post/getposts?userId=${
+        `https://mern-stack-blog-app-render.onrender.com/api/post/getposts?userId=${
           currentUser._id
         }&startIndex=${startIndex}`,
         {
@@ -64,7 +64,7 @@ export default function DashPosts() {
     setShowModal(false);
     try {
       const res = await fetch(
-        `${import.meta.env.VITE_API_URL}/api/post/deletepost/${postIdToDelete}/${currentUser._id}`,
+        `https://mern-stack-blog-app-render.onrender.com/api/post/deletepost/${postIdToDelete}/${currentUser._id}`,
         {
           method: 'DELETE',
           credentials: 'include',
