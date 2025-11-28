@@ -18,9 +18,9 @@ export default function UpdatePost() {
   const navigate = useNavigate();
   const { currentUser } = useSelector((state) => state.user);
 
-  // ================================
-  // FETCH POST TO EDIT
-  // ================================
+
+  //  POST TO EDIT
+
   useEffect(() => {
     const fetchPost = async () => {
       try {
@@ -45,9 +45,9 @@ export default function UpdatePost() {
     fetchPost();
   }, [postId]);
 
-  // ================================
+
   // UPLOAD IMAGE (Cloudinary)
-  // ================================
+  
   const handleUploadImage = async () => {
     try {
       if (!file) {
@@ -85,9 +85,9 @@ export default function UpdatePost() {
     }
   };
 
-  // ================================
+
   // SUBMIT UPDATED POST
-  // ================================
+ 
   const handleSubmit = async (e) => {
     e.preventDefault();
 
@@ -128,101 +128,243 @@ export default function UpdatePost() {
       setPublishError("Something went wrong");
     }
   };
-
+  // CATEGORY Options
+  const CATEGORY_OPTIONS = [
+    { value: "technology", label: "💻 Technology" },
+    { value: "lifestyle", label: "🌿 Lifestyle" },
+    { value: "business", label: "💼 Business & Finance" },
+    { value: "education", label: "📚 Education" },
+    { value: "entertainment", label: "🎬 Entertainment" },
+    { value: "news", label: "📰 News" },
+    { value: "uncategorized", label: "🗂️ Uncategorized" },
+  ];
   return (
-    <div className="p-3 max-w-3xl mx-auto min-h-screen">
-      <h1 className="text-center text-3xl my-7 font-semibold">Update post</h1>
+    // <div className="p-3 max-w-3xl mx-auto min-h-screen">
+    //   <h1 className="text-center text-3xl my-7 font-semibold">Update post</h1>
 
-      <form className="flex flex-col gap-4" onSubmit={handleSubmit}>
-        
-        {/* Title + Category */}
-        <div className="flex flex-col gap-4 sm:flex-row justify-between">
-          
-          <TextInput
-            type="text"
-            placeholder="Title"
-            required
-            className="flex-1"
-            value={formData.title || ""}
-            onChange={(e) =>
-              setFormData({ ...formData, title: e.target.value })
-            }
-          />
+    //   <form className="flex flex-col gap-4" onSubmit={handleSubmit}>
+    //     {/* Title + Category */}
+    //     <div className="flex flex-col gap-4 sm:flex-row justify-between">
+    //       <TextInput
+    //         type="text"
+    //         placeholder="Title"
+    //         required
+    //         className="flex-1"
+    //         value={formData.title || ""}
+    //         onChange={(e) =>
+    //           setFormData({ ...formData, title: e.target.value })
+    //         }
+    //       />
 
-          <Select
-            value={formData.category || "uncategorized"}
-            onChange={(e) =>
-              setFormData({ ...formData, category: e.target.value })
-            }
-          >
-           <option value="uncategorized">🗂️ Select A Category</option>
-            <option value="technology">💻 Technology</option>
-            <option value="lifestyle">🌿 Lifestyle</option>
-            <option value="business">💼 Business & Finance</option>
-            <option value="education">📚 Education</option>
-            <option value="entertainment">🎬 Entertainment</option>
-            <option value="news">📰 News</option>
-          </Select>
+    //       <Select
+    //         value={formData.category || "uncategorized"}
+    //         onChange={(e) =>
+    //           setFormData({ ...formData, category: e.target.value })
+    //         }
+    //       >
+    //         <option value="uncategorized">🗂️ Select A Category</option>
+    //         <option value="technology">💻 Technology</option>
+    //         <option value="lifestyle">🌿 Lifestyle</option>
+    //         <option value="business">💼 Business & Finance</option>
+    //         <option value="education">📚 Education</option>
+    //         <option value="entertainment">🎬 Entertainment</option>
+    //         <option value="news">📰 News</option>
+    //       </Select>
+    //     </div>
 
-        </div>
+    //     {/* Image Upload UI */}
+    //     <div className="flex gap-4 items-center justify-between border-4 border-teal-500 border-dotted p-3">
+    //       <FileInput
+    //         type="file"
+    //         accept="image/*"
+    //         onChange={(e) => setFile(e.target.files[0])}
+    //       />
 
-        {/* Image Upload UI */}
-        <div className="flex gap-4 items-center justify-between border-4 border-teal-500 border-dotted p-3">
+    //       <Button
+    //         type="button"
+    //         gradientDuoTone="purpleToBlue"
+    //         size="sm"
+    //         outline
+    //         disabled={imageUploadProgress}
+    //         onClick={handleUploadImage}
+    //       >
+    //         {imageUploadProgress ? imageUploadProgress : "Upload Image"}
+    //       </Button>
+    //     </div>
 
-          <FileInput
-            type="file"
-            accept="image/*"
-            onChange={(e) => setFile(e.target.files[0])}
-          />
+    //     {/* Errors */}
+    //     {imageUploadError && <Alert color="failure">{imageUploadError}</Alert>}
 
+    //     {/* Preview */}
+    //     {formData.image && (
+    //       <img
+    //         src={formData.image}
+    //         alt="post"
+    //         className="w-full h-72 object-cover"
+    //       />
+    //     )}
+
+    //     {/* Content Editor */}
+    //     <ReactQuill
+    //       theme="snow"
+    //       placeholder="Write something..."
+    //       className="h-72 mb-12"
+    //       value={formData.content || ""}
+    //       onChange={(value) => setFormData({ ...formData, content: value })}
+    //     />
+
+    //     {/* Submit */}
+    //     <Button type="submit" gradientDuoTone="purpleToPink">
+    //       Update post
+    //     </Button>
+
+    //     {publishError && (
+    //       <Alert className="mt-5" color="failure">
+    //         {publishError}
+    //       </Alert>
+    //     )}
+    //   </form>
+    // </div>
+        <div className="min-h-screen bg-gradient-to-br from-indigo-100 via-white to-pink-100 dark:from-gray-900 dark:via-gray-800 dark:to-gray-900 px-6 py-10 flex justify-center">
+      <div className="w-full max-w-6xl grid grid-cols-1 md:grid-cols-2 gap-8">
+
+        {/* LEFT SECTION */}
+        <div className="backdrop-blur-xl bg-white/60 dark:bg-gray-800/60 rounded-2xl shadow-xl p-8 flex flex-col justify-between border border-gray-200 dark:border-gray-700">
+          <div>
+            <h1 className="text-4xl font-bold text-gray-900 dark:text-white mb-3">
+              ✍️ Update Your Post
+            </h1>
+            <p className="text-gray-600 dark:text-gray-400 mb-6">
+              Give your blog a fresh update — refine your content and make it shine.
+            </p>
+
+            {/* TITLE */}
+            <TextInput
+              type="text"
+              placeholder="Enter post title"
+              value={formData.title || ""}
+              required
+              onChange={(e) =>
+                setFormData({ ...formData, title: e.target.value })
+              }
+              className="mb-4"
+            />
+
+            {/* CATEGORY */}
+            <Select
+              value={formData.category || "uncategorized"}
+              onChange={(e) =>
+                setFormData({ ...formData, category: e.target.value })
+              }
+              className="mb-4"
+            >
+              {CATEGORY_OPTIONS.map((opt) => (
+                <option key={opt.value} value={opt.value}>
+                  {opt.label}
+                </option>
+              ))}
+            </Select>
+
+            {/* IMAGE UPLOAD */}
+            <div className="border border-dashed border-gray-400 dark:border-gray-600 rounded-xl p-4">
+              <FileInput
+                type="file"
+                accept="image/*"
+                onChange={(e) => {
+                  if (e.target.files && e.target.files[0]) setFile(e.target.files[0]);
+                }}
+              />
+              <p className="text-xs text-gray-500 mt-2">
+                Upload or replace the featured image
+              </p>
+            </div>
+
+            {/* Upload Progress */}
+            {imageUploadProgress !== null && (
+              <div className="mt-4 w-20 h-20 mx-auto">
+                <CircularProgressbar
+                  value={imageUploadProgress}
+                  text={
+                    typeof imageUploadProgress === "number"
+                      ? `${imageUploadProgress}%`
+                      : imageUploadProgress
+                  }
+                />
+              </div>
+            )}
+          </div>
+
+          {/* Preview Image */}
+          {formData.image && (
+            <img
+              src={formData.image}
+              alt="Preview"
+              className="mt-6 rounded-xl shadow-lg object-cover h-56 w-full"
+            />
+          )}
+
+          {/* Upload Button */}
           <Button
-            type="button"
-            gradientDuoTone="purpleToBlue"
-            size="sm"
-            outline
-            disabled={imageUploadProgress}
             onClick={handleUploadImage}
+            outline
+            color="purple"
+            disabled={imageUploadProgress}
+            className="mt-6 hover:scale-105 transition-all"
           >
-            {imageUploadProgress ? imageUploadProgress : "Upload Image"}
+            Upload Image
           </Button>
 
+          {/* Back Button */}
+          <Button
+            onClick={() => navigate(-1)}
+            outline
+            color="gray"
+            className="mt-4 hover:scale-105 transition-all"
+          >
+            ← Back to Posts
+          </Button>
         </div>
 
-        {/* Errors */}
-        {imageUploadError && (
-          <Alert color="failure">{imageUploadError}</Alert>
-        )}
+        {/* RIGHT SECTION */}
+        <div className="bg-white/80 dark:bg-gray-800/80 backdrop-blur-md rounded-2xl shadow-xl p-8 flex flex-col border border-gray-200 dark:border-gray-700">
+          <form onSubmit={handleSubmit} className="flex flex-col h-full">
 
-        {/* Preview */}
-        {formData.image && (
-          <img
-            src={formData.image}
-            alt="post"
-            className="w-full h-72 object-cover"
-          />
-        )}
+            <h2 className="text-2xl font-semibold text-gray-800 dark:text-gray-100 mb-4">
+              ✨ Content Editor
+            </h2>
 
-        {/* Content Editor */}
-        <ReactQuill
-          theme="snow"
-          placeholder="Write something..."
-          className="h-72 mb-12"
-          value={formData.content || ""}
-          onChange={(value) => setFormData({ ...formData, content: value })}
-        />
+            {/* CONTENT EDITOR */}
+            <div className="flex-grow border border-gray-300 dark:border-gray-600 rounded-lg overflow-hidden mb-6">
+              <ReactQuill
+                theme="snow"
+                value={formData.content || ""}
+                onChange={(value) =>
+                  setFormData({ ...formData, content: value })
+                }
+                className="h-72"
+                placeholder="Start improving your content..."
+                required
+              />
+            </div>
 
-        {/* Submit */}
-        <Button type="submit" gradientDuoTone="purpleToPink">
-          Update post
-        </Button>
+            {/* SUBMIT */}
+            <Button
+              type="submit"
+              disabled={imageUploadProgress !== null}
+              className="bg-gradient-to-r from-indigo-500 via-purple-500 to-pink-500 text-white hover:opacity-90 transition-all py-2 text-lg font-semibold rounded-lg shadow-md"
+            >
+              💾 Save Changes
+            </Button>
 
-        {publishError && (
-          <Alert className="mt-5" color="failure">
-            {publishError}
-          </Alert>
-        )}
-
-      </form>
+            {/* ERRORS */}
+            {publishError && (
+              <Alert className="mt-5" color="failure">
+                {publishError}
+              </Alert>
+            )}
+          </form>
+        </div>
+      </div>
     </div>
   );
 }
