@@ -216,7 +216,7 @@ export default function CommentSection({ postId }) {
             </h3>
             <div className='flex justify-center gap-4'>
               <Button
-                color='failure'
+                color='red'
                 onClick={() => handleDelete(commentToDelete)}
               >
                 Yes, I'm sure
