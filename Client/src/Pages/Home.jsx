@@ -50,7 +50,7 @@ export default function Home() {
         <div className="relative z-10 max-w-4xl animate-fadeInSlow">
           <h1 className="text-4xl md:text-5xl lg:text-7xl font-extrabold font-serif mb-6 text-gray-900 dark:text-white drop-shadow-sm">
             Dive Into the World of
-            <span className="block mt-2 text-transparent bg-clip-text bg-gradient-to-r from-purple-500 via-pink-500 to-orange-400 animate-textShine">
+            <span className="block mt-4 text-transparent bg-clip-text bg-gradient-to-r from-purple-500 via-pink-500 to-orange-400 animate-textShine">
               Blogger Hunt
             </span>
           </h1>
