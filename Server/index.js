@@ -7,7 +7,6 @@ import commentRoutes from './Routes/commentRoute.js';
 import postRoutes from './Routes/postRoute.js';
 import connectDB from "./Database/config.js";
 import cors from "cors";
-
 dotenv.config();
 connectDB();
 
@@ -17,76 +16,34 @@ const app = express();
 app.use(express.json());
 app.use(cookieParser());
 
-app.set("trust proxy", 1);
-
 const allowedOrigins = [
   "http://localhost:5173",                  // local (Vite)
   "https://bloggerhunt-app.netlify.app" // deployed frontend (NO trailing slash)
 ];
 
-// app.use(
-//   cors({
-//     origin: (origin, callback) => {
-//       if (!origin || allowedOrigins.includes(origin)) {
-//        return callback(null, true);
-//       } else {
-//        return callback(new Error("CORS blocked for origin: " + origin));
-//       }
-//     },
-//     credentials: true,
-//     methods: ["GET", "POST", "PUT", "DELETE", "PATCH"],
-//     allowedHeaders: ["Content-Type", "Authorization"],
-//   })
-// );
-// app.use((req, res, next) => {
-//   if (req.method === "OPTIONS") {
-//     res.setHeader("Access-Control-Allow-Origin", req.headers.origin || "");
-//     res.setHeader("Access-Control-Allow-Credentials", "true");
-//     res.setHeader("Access-Control-Allow-Methods", "GET,POST,PUT,DELETE,PATCH");
-//     res.setHeader("Access-Control-Allow-Headers", "Content-Type, Authorization");
-//     return res.sendStatus(200);
-//   }
-//   next();
-// });
-
 app.use(
   cors({
-    origin: allowedOrigins,
+    origin: (origin, callback) => {
+      if (!origin || allowedOrigins.includes(origin)) {
+        callback(null, true);
+      } else {
+        callback(new Error("CORS blocked for origin: " + origin));
+      }
+    },
     credentials: true,
     methods: ["GET", "POST", "PUT", "DELETE", "PATCH"],
     allowedHeaders: ["Content-Type", "Authorization"],
   })
 );
-
-// app.options("*", (req, res) => {
-//   const origin = req.headers.origin;
-//   if (allowedOrigins.includes(origin)) {
-//     res.setHeader("Access-Control-Allow-Origin", origin);
-//   }
-//   res.setHeader("Access-Control-Allow-Credentials", "true");
-//   res.setHeader(
-//     "Access-Control-Allow-Methods",
-//     "GET,POST,PUT,DELETE,PATCH"
-//   );
-//   res.setHeader(
-//     "Access-Control-Allow-Headers",
-//     "Content-Type, Authorization"
-//   );
-//   return res.sendStatus(200);
-// });
-
-app.options("*", (req, res) => {
-  res.header("Access-Control-Allow-Origin", req.headers.origin);
-  res.header("Access-Control-Allow-Credentials", "true");
-  res.header(
-    "Access-Control-Allow-Methods",
-    "GET, POST, PUT, PATCH, DELETE"
-  );
-  res.header(
-    "Access-Control-Allow-Headers",
-    "Content-Type, Authorization"
-  );
-  res.sendStatus(200);
+app.use((req, res, next) => {
+  if (req.method === "OPTIONS") {
+    res.setHeader("Access-Control-Allow-Origin", req.headers.origin || "");
+    res.setHeader("Access-Control-Allow-Credentials", "true");
+    res.setHeader("Access-Control-Allow-Methods", "GET,POST,PUT,DELETE,PATCH");
+    res.setHeader("Access-Control-Allow-Headers", "Content-Type, Authorization");
+    return res.sendStatus(200);
+  }
+  next();
 });
 
 app.get("/", (req, res) => {
