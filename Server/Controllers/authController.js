@@ -83,6 +83,7 @@ export const signin = async (req, res, next) => {
         secure: true,
         sameSite: "None",
           path: "/",
+            priority: "high",
         // partitioned: true,  
         expires: new Date(Date.now() + COOKIE_DAYS * 24 * 60 * 60 * 1000),
       })
@@ -116,6 +117,7 @@ export const googleAuth = async (req, res, next) => {
           secure: true,
           sameSite: "None",
             path: "/",
+              priority: "high",
           // partitioned: true,  
           expires: new Date(Date.now() + COOKIE_DAYS * 24 * 60 * 60 * 1000),
         })
@@ -154,6 +156,7 @@ export const googleAuth = async (req, res, next) => {
         secure: true,
         sameSite: "None",
           path: "/",
+            priority: "high",
         //  partitioned: true, 
         expires: new Date(Date.now() + COOKIE_DAYS * 24 * 60 * 60 * 1000),
       })
