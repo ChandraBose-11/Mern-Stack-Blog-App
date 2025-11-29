@@ -36,8 +36,13 @@ export const signup = async (req, res, next) => {
     // Added return to stop further execution
     return res.json({ success: true, message: "Signup successful" });
   } catch (error) {
-    next(error);
-  }
+if (error.code === 11000) {
+      return res
+        .status(400)
+        .json({ success: false, message: "Email already exists" });
+    }
+
+    next(error);  }
 };
 
 // 🟢 SIGNIN
