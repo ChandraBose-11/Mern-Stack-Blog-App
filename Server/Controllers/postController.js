@@ -3,9 +3,9 @@ import cloudinary from "../cloudinary.js";
 import fs from "fs";
 import { errorHandler } from "../Middleware/error.js";
 
-/* ================================
+/*
    CREATE POST  (FIXED + WORKING)
-================================ */
+ */
 export const create = async (req, res, next) => {
   if (!req.user || !req.user.isAdmin) {
     return next(errorHandler(403, "Not allowed"));
@@ -42,7 +42,7 @@ export const create = async (req, res, next) => {
 
       try {
         fs.unlinkSync(req.file.path);
-      } catch (e) {}
+      } catch (e) { }
     }
 
     // Create slug from title
@@ -66,9 +66,9 @@ export const create = async (req, res, next) => {
   }
 };
 
-/* ================================
+/* 
    UPDATE POST
-================================ */
+*/
 export const updatePost = async (req, res, next) => {
   if (!req.user || !req.user.isAdmin) {
     return next(errorHandler(403, "Not allowed"));
@@ -122,7 +122,7 @@ export const updatePost = async (req, res, next) => {
 
       try {
         fs.unlinkSync(req.file.path);
-      } catch (e) {}
+      } catch (e) { }
     }
 
     const updatedPost = await Post.findByIdAndUpdate(
@@ -138,9 +138,9 @@ export const updatePost = async (req, res, next) => {
   }
 };
 
-/* ================================
+/* 
    GET POSTS
-================================ */
+ */
 export const getposts = async (req, res, next) => {
   try {
     const startIndex = parseInt(req.query.startIndex) || 0;
@@ -181,9 +181,9 @@ export const getposts = async (req, res, next) => {
   }
 };
 
-/* ================================
+/* 
    GET POST BY ID
-================================ */
+ */
 export const getPostById = async (req, res, next) => {
   try {
     const post = await Post.findById(req.params.postId);
@@ -194,9 +194,9 @@ export const getPostById = async (req, res, next) => {
   }
 };
 
-/* ================================
+/* 
    DELETE POST
-================================ */
+ */
 export const deletepost = async (req, res, next) => {
   if (!req.user || (!req.user.isAdmin && req.user.id !== req.params.userId)) {
     return next(errorHandler(403, "Not allowed"));
@@ -210,9 +210,9 @@ export const deletepost = async (req, res, next) => {
   }
 };
 
-/* ================================
+/* 
    UPLOAD IMAGE TO CLOUDINARY ONLY
-================================ */
+ */
 export const Createpostimage = async (req, res) => {
   try {
     if (!req.file) {
@@ -232,7 +232,7 @@ export const Createpostimage = async (req, res) => {
 
     try {
       fs.unlinkSync(req.file.path);
-    } catch (err) {}
+    } catch (err) { }
 
     return res.status(200).json({ imageUrl: uploaded.secure_url });
   } catch (error) {

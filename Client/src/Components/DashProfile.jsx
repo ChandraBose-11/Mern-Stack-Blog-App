@@ -72,7 +72,7 @@ const DashProfile=()=>{
     }
 
     try {
-      const res = await fetch(`https://mern-stack-blog-app-render.onrender.com/api/user/update/${currentUser._id}`, {
+      const res = await fetch(`https://mern-stack-blog-app-server.onrender.com/api/user/update/${currentUser._id}`, {
         method: "PUT",
         credentials: "include",
         body: form,
@@ -97,7 +97,7 @@ const DashProfile=()=>{
     setShowModal(false);
     try {
       dispatch(deleteUserStart());
-      const res = await fetch(`https://mern-stack-blog-app-render.onrender.com/api/user/delete/${currentUser._id}`, {
+      const res = await fetch(`https://mern-stack-blog-app-server.onrender.com/api/user/delete/${currentUser._id}`, {
         method: "DELETE",
         credentials: "include",
       });
@@ -115,7 +115,7 @@ const DashProfile=()=>{
 
   const handleSignout = async () => {
     try {
-      const res = await fetch(`https://mern-stack-blog-app-render.onrender.com/api/user/signout`, {
+      const res = await fetch(`https://mern-stack-blog-app-server.onrender.com/api/user/signout`, {
         method: "POST",
         credentials: "include",
       });

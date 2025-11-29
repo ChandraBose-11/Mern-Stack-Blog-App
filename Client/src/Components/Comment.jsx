@@ -13,7 +13,7 @@ export default function Comment({ comment, onLike, onEdit, onDelete }) {
     const getUser = async () => {
       try {
         const res = await fetch(
-          `https://mern-stack-blog-app-render.onrender.com/api/user/${comment.userId}`
+          `https://mern-stack-blog-app-server.onrender.com/api/user/${comment.userId}`
         );
         const data = await res.json();
         if (res.ok) {
@@ -34,7 +34,7 @@ export default function Comment({ comment, onLike, onEdit, onDelete }) {
   const handleSave = async () => {
     try {
       const res = await fetch(
-        `https://mern-stack-blog-app-render.onrender.com/api/comment/editComment/${
+        `https://mern-stack-blog-app-server.onrender.com/api/comment/editComment/${
           comment._id
         }`,
         {

@@ -25,7 +25,7 @@ export default function DashComments() {
     const fetchComments = async () => {
       try {
         const res = await fetch(
-          `https://mern-stack-blog-app-render.onrender.com/api/comment/getcomments`,
+          `https://mern-stack-blog-app-server.onrender.com/api/comment/getcomments`,
           {
             credentials: "include",
           }
@@ -50,7 +50,7 @@ export default function DashComments() {
     const startIndex = comments.length;
     try {
       const res = await fetch(
-        `https://mern-stack-blog-app-render.onrender.com/api/comment/getcomments?startIndex=${startIndex}`,
+        `https://mern-stack-blog-app-server.onrender.com/api/comment/getcomments?startIndex=${startIndex}`,
         {
           credentials: "include",
         }
@@ -71,7 +71,7 @@ export default function DashComments() {
     setShowModal(false);
     try {
       const res = await fetch(
-        `https://mern-stack-blog-app-render.onrender.com/api/comment/deleteComment/${commentIdToDelete}`,
+        `https://mern-stack-blog-app-server.onrender.com/api/comment/deleteComment/${commentIdToDelete}`,
         {
           method: "DELETE",
           credentials: "include",

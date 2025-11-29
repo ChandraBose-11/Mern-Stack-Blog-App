@@ -24,7 +24,7 @@ export default function UpdatePost() {
     const fetchPost = async () => {
       try {
         const res = await fetch(
-          `https://mern-stack-blog-app-render.onrender.com/api/post/${postId}`,
+          `https://mern-stack-blog-app-server.onrender.com/api/post/${postId}`,
           {
             credentials: "include",
           }
@@ -63,7 +63,7 @@ export default function UpdatePost() {
       form.append("image", file);
 
       const res = await fetch(
-        `https://mern-stack-blog-app-render.onrender.com/api/post/create-image`,
+        `https://mern-stack-blog-app-server.onrender.com/api/post/create-image`,
         {
           method: "POST",
           credentials: "include",
@@ -112,7 +112,7 @@ export default function UpdatePost() {
       }
 
       const res = await fetch(
-        `https://mern-stack-blog-app-render.onrender.com/api/post/update/${postId}`,
+        `https://mern-stack-blog-app-server.onrender.com/api/post/update/${postId}`,
         {
           method: "PUT",
           credentials: "include",

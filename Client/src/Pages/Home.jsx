@@ -66,7 +66,7 @@ export default function Home() {
   useEffect(() => {
     const fetchPosts = async () => {
       const res = await fetch(
-        `https://mern-stack-blog-app-render.onrender.com/api/post/getPosts`, {
+        `https://mern-stack-blog-app-server.onrender.com/api/post/getPosts`, {
         method: "GET",
         credentials: "include", // 🔥 REQUIRED FOR NETLIFY + RENDER
       }

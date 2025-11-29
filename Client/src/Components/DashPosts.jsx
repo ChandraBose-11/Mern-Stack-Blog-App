@@ -25,7 +25,7 @@ export default function DashPosts() {
     const fetchPosts = async () => {
       try {
         const res = await fetch(
-          `https://mern-stack-blog-app-render.onrender.com/api/post/getposts?userId=${currentUser._id}`,
+          `https://mern-stack-blog-app-server.onrender.com/api/post/getposts?userId=${currentUser._id}`,
           {
             credentials: "include",
           }
@@ -50,7 +50,7 @@ export default function DashPosts() {
     const startIndex = userPosts.length;
     try {
       const res = await fetch(
-        `https://mern-stack-blog-app-render.onrender.com/api/post/getposts?userId=${currentUser._id}&startIndex=${startIndex}`,
+        `https://mern-stack-blog-app-server.onrender.com/api/post/getposts?userId=${currentUser._id}&startIndex=${startIndex}`,
         {
           credentials: "include",
         }
@@ -71,7 +71,7 @@ export default function DashPosts() {
     setShowModal(false);
     try {
       const res = await fetch(
-        `https://mern-stack-blog-app-render.onrender.com/api/post/deletepost/${postIdToDelete}/${currentUser._id}`,
+        `https://mern-stack-blog-app-server.onrender.com/api/post/deletepost/${postIdToDelete}/${currentUser._id}`,
         {
           method: "DELETE",
           credentials: "include",

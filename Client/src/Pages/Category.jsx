@@ -62,7 +62,7 @@ export default function CreatePost() {
     e.preventDefault();
     try {
       const res = await fetch(
-        `https://mern-stack-blog-app-render.onrender.com/api/post/create`,
+        `https://mern-stack-blog-app-server.onrender.com/api/post/create`,
         {
           method: "POST",
           credentials: "include",

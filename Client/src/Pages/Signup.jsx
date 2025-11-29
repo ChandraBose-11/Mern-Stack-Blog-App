@@ -20,7 +20,7 @@ export default function SignUp() {
       setLoading(true);
       setErrorMessage(null);
       const res = await fetch(
-        `https://mern-stack-blog-app-render.onrender.com/api/auth/signup`,
+        `https://mern-stack-blog-app-server.onrender.com/api/auth/signup`,
         {
           method: "POST",
           headers: { "Content-Type": "application/json" },

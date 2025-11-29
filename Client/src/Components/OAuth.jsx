@@ -16,7 +16,7 @@ export default function OAuth() {
     try {
       const resultsFromGoogle = await signInWithPopup(auth, provider);
       const res = await fetch(
-        `https://mern-stack-blog-app-render.onrender.com/api/auth/google`,
+        `https://mern-stack-blog-app-server.onrender.com/api/auth/google`,
         {
           method: "POST",
           credentials: "include",

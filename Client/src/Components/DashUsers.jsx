@@ -25,7 +25,7 @@ export default function DashUsers() {
     const fetchUsers = async () => {
       try {
         const res = await fetch(
-          `https://mern-stack-blog-app-render.onrender.com/api/user/getusers`,
+          `https://mern-stack-blog-app-server.onrender.com/api/user/getusers`,
           {
             credentials: "include",
           }
@@ -50,7 +50,7 @@ export default function DashUsers() {
     const startIndex = users.length;
     try {
       const res = await fetch(
-        `https://mern-stack-blog-app-render.onrender.com/api/user/getusers?startIndex=${startIndex}`,
+        `https://mern-stack-blog-app-server.onrender.com/api/user/getusers?startIndex=${startIndex}`,
         {
           credentials: "include",
         }
@@ -70,7 +70,7 @@ export default function DashUsers() {
   const handleDeleteUser = async () => {
     try {
       const res = await fetch(
-        `https://mern-stack-blog-app-render.onrender.com/api/user/delete/${userIdToDelete}`,
+        `https://mern-stack-blog-app-server.onrender.com/api/user/delete/${userIdToDelete}`,
         {
           method: "DELETE",
           credentials: "include",

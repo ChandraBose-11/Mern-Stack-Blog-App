@@ -24,7 +24,7 @@ const SignIn=()=> {
     }
     try {
       dispatch(signInStart());
-      const res = await fetch(`https://mern-stack-blog-app-render.onrender.com/api/auth/signin`, {
+      const res = await fetch(`https://mern-stack-blog-app-server.onrender.com/api/auth/signin`, {
         method: "POST",
         credentials: "include",
         headers: { "Content-Type": "application/json" },

@@ -39,7 +39,7 @@ export default function Header() {
   const handleSignout = async () => {
     try {
       const res = await fetch(
-        `https://mern-stack-blog-app-render.onrender.com/api/user/signout`,
+        `https://mern-stack-blog-app-server.onrender.com/api/user/signout`,
         {
           method: "POST",
           credentials: "include",

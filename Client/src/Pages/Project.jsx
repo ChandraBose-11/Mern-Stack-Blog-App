@@ -13,7 +13,7 @@ const Project = () => {
       try {
         setLoading(true);
         setError(false);
-        const res = await fetch(`https://mern-stack-blog-app-render.onrender.com/api/post/getposts`, 
+        const res = await fetch(`https://mern-stack-blog-app-server.onrender.com/api/post/getposts`, 
         {
           method: "GET",
           credentials: "include", // 🔥 Required for JWT cookies

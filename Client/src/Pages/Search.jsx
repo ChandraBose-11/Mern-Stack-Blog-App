@@ -37,7 +37,7 @@ export default function Search() {
       setLoading(true);
       const searchQuery = urlParams.toString();
       const res = await fetch(
-        `https://mern-stack-blog-app-render.onrender.com/api/post/getposts?${searchQuery}`,
+        `https://mern-stack-blog-app-server.onrender.com/api/post/getposts?${searchQuery}`,
         {
           method: "GET",
           credentials: "include", // 🔥 ADDED
@@ -92,7 +92,7 @@ export default function Search() {
     urlParams.set("startIndex", startIndex);
     const searchQuery = urlParams.toString();
     const res = await fetch(
-      `https://mern-stack-blog-app-render.onrender.com/api/post/getposts?${searchQuery}`,
+      `https://mern-stack-blog-app-server.onrender.com/api/post/getposts?${searchQuery}`,
       {
         method: "GET",
         credentials: "include", // 🔥 ADDED
