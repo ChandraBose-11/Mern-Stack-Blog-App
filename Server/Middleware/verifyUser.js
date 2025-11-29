@@ -23,7 +23,7 @@ import jwt from "jsonwebtoken";
 /*
   ✅ FIX: Reads token correctly from HTTP-only cookie
 */
-export const verifyUser = (req, res, next) => {
+export const verifyToken = (req, res, next) => {
   const token = req.cookies.access_token;
 
   if (!token) {
