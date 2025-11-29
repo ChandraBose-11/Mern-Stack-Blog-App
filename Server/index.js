@@ -1,48 +1,46 @@
+// server.js
 import express from "express";
 import dotenv from "dotenv";
 import cookieParser from "cookie-parser";
-import userRoutes from './Routes/userRoute.js';
-import authRoutes from './Routes/authRoute.js';
-import commentRoutes from './Routes/commentRoute.js';
-import postRoutes from './Routes/postRoute.js';
+import userRoutes from "./Routes/userRoute.js";
+import authRoutes from "./Routes/authRoute.js";
+import commentRoutes from "./Routes/commentRoute.js";
+import postRoutes from "./Routes/postRoute.js";
 import connectDB from "./Database/config.js";
 import cors from "cors";
+
 dotenv.config();
 connectDB();
-
 
 const app = express();
 
 app.use(express.json());
 app.use(cookieParser());
 
+// 🔄 CHANGE: clean, stable CORS config for Netlify + localhost
 const allowedOrigins = [
-  "http://localhost:5173",                  // local (Vite)
-  "https://bloggerhunt-app.netlify.app" // deployed frontend (NO trailing slash)
+  "http://localhost:5173",
+  "https://bloggerhunt-app.netlify.app",
 ];
 
 app.use(
   cors({
-    origin: (origin, callback) => {
+    origin: function (origin, callback) {
       if (!origin || allowedOrigins.includes(origin)) {
         callback(null, true);
       } else {
         callback(new Error("CORS blocked for origin: " + origin));
       }
     },
-    credentials: true,
+    credentials: true, // 🔄 CHANGE: allows cookies
     methods: ["GET", "POST", "PUT", "DELETE", "PATCH"],
     allowedHeaders: ["Content-Type", "Authorization"],
   })
 );
+
+// 🔄 CHANGE: ensure Access-Control-Allow-Credentials is always set
 app.use((req, res, next) => {
-  if (req.method === "OPTIONS") {
-    res.setHeader("Access-Control-Allow-Origin", req.headers.origin || "");
-    res.setHeader("Access-Control-Allow-Credentials", "true");
-    res.setHeader("Access-Control-Allow-Methods", "GET,POST,PUT,DELETE,PATCH");
-    res.setHeader("Access-Control-Allow-Headers", "Content-Type, Authorization");
-    return res.sendStatus(200);
-  }
+  res.header("Access-Control-Allow-Credentials", "true");
   next();
 });
 
@@ -55,9 +53,6 @@ app.use("/api/user", userRoutes);
 app.use("/api/auth", authRoutes);
 app.use("/api/post", postRoutes);
 app.use("/api/comment", commentRoutes);
-
-
-
 
 // global error handler
 app.use((err, req, res, next) => {
