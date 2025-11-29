@@ -351,7 +351,7 @@ This project is open source and available under the MIT License.
 
 For issues, questions, or feature requests:
 - **GitHub Issues:** [Open an issue](https://github.com/ChandraBose-11/Mern-Stack-Blog-App/issues)
-- **Email:** (add your contact email if needed)
+- Email:Chandrubose46@gmail.com
 
 ---
 
