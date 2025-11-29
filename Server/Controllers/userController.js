@@ -340,7 +340,7 @@ export const signout = (req, res, next) => {
       .clearCookie("access_token",{
         httpOnly: true,
         secure: true,
-        sameSite: "None",
+        sameSite: "none",
         path: "/",
       })
       .status(200)

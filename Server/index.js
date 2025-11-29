@@ -1,70 +1,69 @@
 import express from "express";
 import dotenv from "dotenv";
 import cookieParser from "cookie-parser";
-import userRoutes from './Routes/userRoute.js';
-import authRoutes from './Routes/authRoute.js';
-import commentRoutes from './Routes/commentRoute.js';
-import postRoutes from './Routes/postRoute.js';
+import userRoutes from "./Routes/userRoute.js";
+import authRoutes from "./Routes/authRoute.js";
+import commentRoutes from "./Routes/commentRoute.js";
+import postRoutes from "./Routes/postRoute.js";
 import connectDB from "./Database/config.js";
 import cors from "cors";
+
 dotenv.config();
 connectDB();
-
 
 const app = express();
 
 app.use(express.json());
 app.use(cookieParser());
 
+// --------------------------------------------------------
+// CORS CONFIG (WORKS WITH NETLIFY + RENDER)
+// --------------------------------------------------------
 const allowedOrigins = [
-  "http://localhost:5173",                  // local (Vite)
-  "https://bloggerhunt-app.netlify.app" // deployed frontend (NO trailing slash)
+  "http://localhost:5173",
+  "https://bloggerhunt-app.netlify.app"
 ];
 
 app.use(
   cors({
-    origin: (origin, callback) => {
-      if (!origin || allowedOrigins.includes(origin)) {
-        callback(null, true);
-      } else {
-        callback(new Error("CORS blocked for origin: " + origin));
-      }
-    },
+    origin: allowedOrigins,
     credentials: true,
     methods: ["GET", "POST", "PUT", "DELETE", "PATCH"],
-    allowedHeaders: ["Content-Type", "Authorization"],
+    allowedHeaders: ["Content-Type", "Authorization"]
   })
 );
-app.use((req, res, next) => {
-  if (req.method === "OPTIONS") {
-    res.setHeader("Access-Control-Allow-Origin", req.headers.origin || "");
-    res.setHeader("Access-Control-Allow-Credentials", "true");
-    res.setHeader("Access-Control-Allow-Methods", "GET,POST,PUT,DELETE,PATCH");
-    res.setHeader("Access-Control-Allow-Headers", "Content-Type, Authorization");
-    return res.sendStatus(200);
-  }
-  next();
-});
 
+// Pre-flight handling (important for fetch + cookies)
+app.options("*", cors({
+  origin: allowedOrigins,
+  credentials: true
+}));
+
+// --------------------------------------------------------
 app.get("/", (req, res) => {
-  res.status(200).json({ message: "Backend running successfully ✅" });
+  res.status(200).json({ message: "Backend is running successfully 🚀" });
 });
 
-// ROUTES
+// --------------------------------------------------------
+// API ROUTES
+// --------------------------------------------------------
 app.use("/api/user", userRoutes);
 app.use("/api/auth", authRoutes);
 app.use("/api/post", postRoutes);
 app.use("/api/comment", commentRoutes);
 
-
-
-
-// global error handler
+// --------------------------------------------------------
+// GLOBAL ERROR HANDLER
+// --------------------------------------------------------
 app.use((err, req, res, next) => {
   const status = err.statusCode || 500;
-  const msg = err.message || "Internal Server Error";
-  res.status(status).json({ success: false, status, msg });
+  res.status(status).json({
+    success: false,
+    status,
+    msg: err.message || "Internal server error"
+  });
 });
 
+// --------------------------------------------------------
 const PORT = process.env.PORT || 3000;
 app.listen(PORT, () => console.log(`Server Running on PORT ${PORT}`));

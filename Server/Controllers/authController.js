@@ -3,13 +3,13 @@ import User from "../Models/userModel.js";
 import bcryptjs from "bcryptjs";
 import jwt from "jsonwebtoken";
 
-// Default cookie expiry if .env is missing the value
-const COOKIE_DAYS = process.env.COOKIE_EXPIRES_IN || 7;
+// // Default cookie expiry if .env is missing the value
+// const COOKIE_DAYS = process.env.COOKIE_EXPIRES_IN || 7;
 
-// Ensure JWT secret exists
-if (!process.env.JWT_SECRET_KEY) {
-  console.error("❌ ERROR: Missing JWT_SECRET_KEY in environment variables.");
-}
+// // Ensure JWT secret exists
+// if (!process.env.JWT_SECRET_KEY) {
+//   console.error("❌ ERROR: Missing JWT_SECRET_KEY in environment variables.");
+// }
 
 //SIGNUP
 
@@ -81,9 +81,9 @@ export const signin = async (req, res, next) => {
       .cookie("access_token", token, {
         httpOnly: true,
         secure: true,
-        sameSite: "None",
-          path: "/",
-        expires: new Date(Date.now() + COOKIE_DAYS * 24 * 60 * 60 * 1000),
+        sameSite: "none",
+        path: "/",
+        expires: new Date(Date.now() + COOKIE_EXPIRES_IN * 24 * 60 * 60 * 1000),
       })
       .json({ success: true, ...rest });
   } catch (error) {
@@ -113,8 +113,8 @@ export const googleAuth = async (req, res, next) => {
         .cookie("access_token", token, {
           httpOnly: true,
           secure: true,
-          sameSite: "None",
-          expires: new Date(Date.now() + COOKIE_DAYS * 24 * 60 * 60 * 1000),
+          sameSite: "none",
+          expires: new Date(Date.now() + COOKIE_EXPIRES_IN * 24 * 60 * 60 * 1000),
         })
         .json(rest);
     }
@@ -149,9 +149,9 @@ export const googleAuth = async (req, res, next) => {
       .cookie("access_token", token, {
         httpOnly: true,
         secure: true,
-        sameSite: "None",
-          path: "/",
-        expires: new Date(Date.now() + COOKIE_DAYS * 24 * 60 * 60 * 1000),
+        sameSite: "none",
+        path: "/",
+        expires: new Date(Date.now() + COOKIE_EXPIRES_IN * 24 * 60 * 60 * 1000),
       })
       .json(rest);
   } catch (error) {
