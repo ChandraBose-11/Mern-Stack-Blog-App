@@ -1,11 +1,10 @@
-// server.js
 import express from "express";
 import dotenv from "dotenv";
 import cookieParser from "cookie-parser";
-import userRoutes from "./Routes/userRoute.js";
-import authRoutes from "./Routes/authRoute.js";
-import commentRoutes from "./Routes/commentRoute.js";
-import postRoutes from "./Routes/postRoute.js";
+import userRoutes from './Routes/userRoute.js';
+import authRoutes from './Routes/authRoute.js';
+import commentRoutes from './Routes/commentRoute.js';
+import postRoutes from './Routes/postRoute.js';
 import connectDB from "./Database/config.js";
 import cors from "cors";
 
@@ -17,49 +16,58 @@ const app = express();
 app.use(express.json());
 app.use(cookieParser());
 
-// 🔄 CHANGE: clean, stable CORS config for Netlify + localhost
+// ⭐ FIX: Allowed frontend origins
 const allowedOrigins = [
   "http://localhost:5173",
-  "https://bloggerhunt-app.netlify.app",
+  "https://bloggerhunt-app.netlify.app"
 ];
 
-app.use(
-  cors({
-    origin: function (origin, callback) {
-      if (!origin || allowedOrigins.includes(origin)) {
-        callback(null, true);
-      } else {
-        callback(new Error("CORS blocked for origin: " + origin));
-      }
-    },
-    credentials: true, // 🔄 CHANGE: allows cookies
-    methods: ["GET", "POST", "PUT", "DELETE", "PATCH"],
-    allowedHeaders: ["Content-Type", "Authorization"],
-  })
-);
+// ⭐ FIX: SIMPLE CORS → No callback version (prevents CORS crash in Windows)
+app.use(cors({
+  origin: allowedOrigins,
+  credentials: true,
+  methods: ["GET", "POST", "PUT", "DELETE", "PATCH"],
+}));
 
-// 🔄 CHANGE: ensure Access-Control-Allow-Credentials is always set
+// ⭐ FIX: Set headers globally (required for cookies)
 app.use((req, res, next) => {
-  res.header("Access-Control-Allow-Credentials", "true");
+  const origin = req.headers.origin;
+
+  if (allowedOrigins.includes(origin)) {
+    res.setHeader("Access-Control-Allow-Origin", origin);
+  }
+
+  res.setHeader("Access-Control-Allow-Credentials", "true");
+  res.setHeader("Access-Control-Allow-Methods", "GET,POST,PUT,DELETE,PATCH");
+  res.setHeader("Access-Control-Allow-Headers", "Content-Type");
+
+  if (req.method === "OPTIONS") {
+    return res.sendStatus(200);
+  }
+
   next();
 });
 
+// Test route
 app.get("/", (req, res) => {
   res.status(200).json({ message: "Backend running successfully ✅" });
 });
 
-// ROUTES
+// Routes
 app.use("/api/user", userRoutes);
 app.use("/api/auth", authRoutes);
 app.use("/api/post", postRoutes);
 app.use("/api/comment", commentRoutes);
 
-// global error handler
+// Global error handler
 app.use((err, req, res, next) => {
   const status = err.statusCode || 500;
-  const msg = err.message || "Internal Server Error";
-  res.status(status).json({ success: false, status, msg });
+  res.status(status).json({
+    success: false,
+    message: err.message || "Internal Server Error",
+  });
 });
 
+// Server
 const PORT = process.env.PORT || 3000;
 app.listen(PORT, () => console.log(`Server Running on PORT ${PORT}`));

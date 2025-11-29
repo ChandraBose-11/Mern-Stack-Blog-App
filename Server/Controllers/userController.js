@@ -341,7 +341,7 @@ export const signout = (req, res, next) => {
     httpOnly: true,
     secure: true,
     sameSite: "None",
-    partitioned: true,
+    // partitioned: true,
     path: "/",
   })
       .status(200)
