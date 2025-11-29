@@ -123,7 +123,7 @@ const DashProfile=()=>{
     } catch (error) {}
   };
  const homeNavigate = () => {
-    navigate("/");
+    navigate("/signin");
   };
   return (
     
